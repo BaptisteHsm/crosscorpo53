@@ -1,0 +1,7 @@
+{
+  "name": "cross-corpo-53-resultats",
+  "private": true,
+  "type": "module",
+  "scripts": { "build-data": "node scripts/build-data.mjs" },
+  "dependencies": { "pdfjs-dist": "3.11.174" }
+}

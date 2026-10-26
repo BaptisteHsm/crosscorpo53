@@ -9,7 +9,17 @@ Site public des résultats, classements et statistiques des Cross Corporatifs 53
 3. Attendre 1 à 2 minutes : l'automatisation (onglet **Actions**) lit le PDF, met à jour `data/` et republie le site.
 
 Pour corriger un cross, redéposer un PDF du même cross : il remplace le précédent.
+Le PDF est supprimé du dépôt une fois lu : seuls les résultats extraits (sans année de naissance) sont publiés.
 Seul le propriétaire du dépôt peut déposer des fichiers, donc personne d'autre ne peut modifier les résultats.
+
+## Retirer un coureur (droit d'opposition)
+
+1. Sur GitHub : **Settings → Secrets and variables → Actions → New repository secret** (ou modifier le secret existant).
+2. Nom : `EXCLUSIONS`. Valeur : les numéros de dossard à masquer, séparés par des virgules (ex. `1234, 5678`).
+3. Onglet **Actions → Résultats et publication → Run workflow**.
+
+Le coureur apparaît alors comme « Coureur masqué » sur tout le site ; les places des autres ne changent pas.
+La liste reste privée (secret), elle n'est pas visible dans le dépôt public.
 
 ## Contenu
 

@@ -78,14 +78,36 @@ for(const f of fs.readdirSync(pdfDir).filter(f=>/\.pdf$/i.test(f)).sort()){
   const buf=new Uint8Array(fs.readFileSync(path.join(pdfDir,f)));
   const p=parseLines(await pdfLines(buf));
   if(!p.n||!Object.keys(p.dists).length){console.error(`✗ ${f} : aucun classement général reconnu`);failed=true;continue}
-  const out={n:p.n,date:p.date,source:f,dists:{}};
+  const out={n:p.n,date:p.date,dists:{}};
   for(const [d,D] of Object.entries(p.dists)){
     const teams=D.teams.length?D.teams:computeTeams(D.rows,d);
     out.dists[d]={km:D.km,rows:D.rows.map(packRow),teams:teams.map(packTeam)};
     console.log(`✓ ${f} → cross N°${p.n} ${d} : ${D.rows.length} arrivants, ${teams.length} équipes`);
   }
   fs.writeFileSync(path.join(dataDir,`cross-${p.n}.json`),JSON.stringify(out));
+  fs.unlinkSync(path.join(pdfDir,f)); // le PDF n'est pas conservé dans le dépôt public
 }
+// Minimisation et droit d'opposition, appliqués à tous les cross publiés.
+// - l'année de naissance est remplacée par une tranche d'âge ;
+// - les dossards listés dans le secret GitHub EXCLUSIONS (ex. "1234,5678") sont masqués.
+const EXCL=new Set(String(process.env.EXCLUSIONS||"").split(/[\s,;]+/).filter(Boolean).map(Number));
+const ageBand=ne=>{if(/[-+]/.test(String(ne)))return String(ne);const y=Number(ne);const a=2026-(y<=40?2000+y:1900+y);return a<20?"16-19":a>=70?"70+":Math.floor(a/10)*10+"-"+(Math.floor(a/10)*10+9)};
+let maskedCount=0;
+for(const f of fs.readdirSync(dataDir).filter(f=>/^cross-\d+\.json$/.test(f))){
+  const fp=path.join(dataDir,f);const c=JSON.parse(fs.readFileSync(fp));
+  for(const D of Object.values(c.dists)){
+    const remap={};
+    for(const r of D.rows){
+      r[4]=ageBand(r[4]);
+      if(r[3]>0&&EXCL.has(r[3])){remap[r[3]]=-r[0];r[3]=-r[0];r[1]="Coureur masqué";r[2]="";maskedCount++}
+    }
+    for(const tm of D.teams)tm[7]=tm[7].map(x=>remap[x]??x);
+  }
+  delete c.source;
+  fs.writeFileSync(fp,JSON.stringify(c));
+}
+if(maskedCount)console.log(`${maskedCount} résultat(s) masqué(s)`);
+
 const races=fs.readdirSync(dataDir).filter(f=>/^cross-\d+\.json$/.test(f)).map(f=>JSON.parse(fs.readFileSync(path.join(dataDir,f)))).sort((a,b)=>a.n-b.n)
   .map(r=>({n:r.n,date:r.date,file:`cross-${r.n}.json`,dists:Object.fromEntries(Object.entries(r.dists).map(([d,D])=>[d,{km:D.km,count:D.rows.length}]))}));
 const idxPath=path.join(dataDir,"index.json");

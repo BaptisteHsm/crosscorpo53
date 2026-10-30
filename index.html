@@ -161,6 +161,9 @@ tbody tr.click:hover td{background:var(--surface-3)}
 .rules label{display:flex;flex-direction:column;gap:5px;font-family:var(--display);font-size:15px;color:var(--ink)}
 .rules p{margin:0;font-size:13.5px;color:var(--ink-2);line-height:1.55}
 .rules .full{grid-column:1/-1;border-top:1px solid rgba(3,145,218,.2);padding-top:14px}
+.chpick{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+.chpick span{font-family:var(--display);font-size:20px}
+.chpick select{font-size:16px;padding:11px 14px;min-width:min(100%,340px);font-weight:600}
 .chgroups{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:22px}
 .chgroup{background:var(--surface-2);border-radius:var(--r-lg);padding:18px 20px}
 .chgroup h3{font-size:17px;margin-bottom:12px}
@@ -558,8 +561,8 @@ function raceTeams(n,avail){
 
 function pageSaison(){
   const ch=CH.find(c=>c.k===S.s.ch)||CH[2];
-  const groups=["ind","m3","eq"].map(g=>`<div class="chgroup"><h3>${CH_GRP[g]}</h3><div class="seg">${CH.filter(c=>c.grp===g).map(c=>`<button type="button" data-ch="${c.k}" aria-pressed="${c.k===ch.k}">${c.short||c.label}</button>`).join("")}</div></div>`).join("");
-  const head=`<a class="back" href="#accueil" data-go="accueil">← Accueil</a><div class="pagehead"><div><h2>Classement général</h2><div class="sub">${CH_GRP[ch.grp]} · ${ch.label} · ${racesWithData().length} cross sur ${CAL.length}</div></div></div><div class="chgroups">${groups}</div>`;
+  const groups=`<label class="chpick"><span>Challenge</span><select class="field" id="sch">${["ind","m3","eq"].map(g=>`<optgroup label="${CH_GRP[g]}">${CH.filter(c=>c.grp===g).map(c=>`<option value="${c.k}" ${c.k===ch.k?"selected":""}>${g==="ind"?"Individuel":g==="m3"?"Masters 3 et +":"Équipes"} · ${c.short||c.label}</option>`).join("")}</optgroup>`).join("")}</select></label>`;
+  const head=`<a class="back" href="#accueil" data-go="accueil">← Accueil</a><div class="pagehead"><div><h2>Classement général</h2><div class="sub">${CH_GRP[ch.grp]} · ${ch.label} · ${racesWithData().length} cross sur ${CAL.length}</div></div></div>${groups}`;
   if(!racesWithData().length)return head+emptyState();
   if(ch.team){
     const {list,races}=teamSeason(ch.d);
@@ -959,7 +962,7 @@ document.addEventListener("keydown",e=>{
 document.addEventListener("change",e=>{
   const id=e.target.id,v=e.target.value;
   if(id==="fcat")S.f.cat=v;else if(id==="fclub")S.f.club=v;
-  else if(id==="smode")S.s.mode=v;else if(id==="sbest")S.s.best=+v;else if(id==="smin")S.s.min=+v;
+  else if(id==="sch"){S.s.ch=v;S.s.cat="";S.s.club=""}else if(id==="smode")S.s.mode=v;else if(id==="sbest")S.s.best=+v;else if(id==="smin")S.s.min=+v;
   else if(id==="scat")S.s.cat=v;else if(id==="sclub")S.s.club=v;else if(id==="tall")S.s.all=v==="1";else return;
   S.limit=150;render();
 });

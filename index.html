@@ -254,6 +254,8 @@ tbody tr.click:hover td{background:var(--surface-3)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
 /* Rejouer la course */
+.headbtns{display:flex;gap:10px;flex-wrap:wrap}
+.headbtns .btn[aria-pressed="true"]{background:var(--green-dark);box-shadow:inset 0 0 0 2px rgba(255,255,255,.35)}
 .rp{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px;align-items:start}
 .rp-left{display:flex;flex-direction:column;gap:16px;min-width:0}
 .rp-box input.field{flex:none}
@@ -500,11 +502,11 @@ function distSeg(cur,avail,attr){return`<div class="seg" role="group" aria-label
 
 function pageCourse(){
   const n=S.race;const meta=S.races[n];const cal=calOf(n);const avail=Object.keys(meta.dists);
-  const tabs=[...avail.sort((a,b)=>a==="long"?-1:1).map(d=>[d,DIST_LABEL[d]]),["equipes","Équipes"],...(meta.track?[["replay","Rejouer la course"]]:[])];
-  if(!tabs.some(t=>t[0]===S.rtab))S.rtab=tabs[0][0];
+  const tabs=[...avail.sort((a,b)=>a==="long"?-1:1).map(d=>[d,DIST_LABEL[d]]),["equipes","Équipes"]];
+  if(!tabs.some(t=>t[0]===S.rtab)&&!(S.rtab==="replay"&&meta.track))S.rtab=tabs[0][0];
   const head=`<a class="back" href="#accueil" data-go="accueil">← Tous les cross</a>
   <div class="pagehead"><div><h2>Cross N°${n} · ${esc(cal.lieu||"")}</h2><div class="sub">${meta.date?fmtDateLong(meta.date):""}</div></div>
-    <a class="btn primary" href="${cal.url}" target="_blank" rel="noopener">En savoir plus</a></div>
+    <div class="headbtns">${meta.track?`<button class="btn primary" type="button" data-rtab="replay" ${S.rtab==="replay"?'aria-pressed="true"':""}>La course en live</button>`:""}<a class="btn primary" href="${cal.url}" target="_blank" rel="noopener">En savoir plus</a></div></div>
   <div class="tabs" role="tablist">${tabs.map(([k,l])=>`<button class="tab" role="tab" data-rtab="${k}" aria-selected="${S.rtab===k}">${l}</button>`).join("")}</div>`;
   return head+(S.rtab==="replay"?replayHtml(n):S.rtab==="equipes"?raceTeams(n,avail):raceTable(n,S.rtab));
 }

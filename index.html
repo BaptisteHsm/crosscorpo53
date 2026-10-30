@@ -173,9 +173,11 @@ tbody tr.click:hover td{background:var(--surface-3)}
 .kpi .v{font-family:var(--display);font-size:34px;line-height:1}
 .kpi .k{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2);margin-top:6px}
 .kpi .s{font-size:12.5px;color:var(--ink-3);margin-top:2px}
-.grid2{align-items:start;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:24px}
+.grid2{align-items:stretch;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:24px}
 .card{background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:24px 26px;min-width:0}
 .card h3{font-size:20px;margin-bottom:6px}
+.card.wide{grid-column:1/-1}
+.podiums{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px}
 .card .cap{font-size:12.5px;color:var(--ink-3);margin:0 0 18px}
 .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-2);margin-bottom:16px}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
@@ -653,17 +655,17 @@ function pageStats(){
     <div class="card"><h3>Arrivants par cross</h3><p class="cap">Nombre de coureurs classés à chaque manche.</p>
       <div class="legend"><span><i style="background:var(--green)"></i>Cross long</span><span><i style="background:var(--blue)"></i>Cross court</span></div>
       ${hbars(perRace,maxP,["var(--green)","var(--blue)"])}</div>
-    <div class="card"><h3>Meilleurs temps de la saison</h3><p class="cap">Toutes manches confondues.</p>
-      <div style="display:flex;flex-direction:column;gap:22px">${podium("Cross long · hommes",best("long","M"))}${podium("Cross long · femmes",best("long","F"))}${podium("Cross court · femmes",best("court","F"))}</div></div>
-    <div class="card"><h3>Entreprises les plus représentées</h3><p class="cap">Coureurs différents sur la saison (hors individuels). Cliquez pour voir l'équipe.</p>${LEG_FM}
-      ${hbars(topClubs.map(c=>({label:c.club,labelHtml:`<span data-club="${esc(c.club)}" style="cursor:pointer">${esc(c.club)}</span>`,vals:[c.F,c.M],tip:`${c.club} : ${c.F+c.M} coureurs (${c.F} F, ${c.M} H), ${c.parts} participations`})),maxC,["var(--f)","var(--m)"])}</div>
-    <div class="card"><h3>Pyramide des âges</h3><p class="cap">Coureurs différents par tranche d'âge.</p>${LEG_FM}
-      <div class="pyr">${pyr.slice().reverse().map(x=>`<div class="row" data-tip="${x.l} ans : ${x.F} femmes, ${x.M} hommes"><div class="l"><span class="num">${x.F}</span><span class="b" style="width:${(x.F/mxp*100).toFixed(1)}%"></span></div><div class="mid">${x.l}</div><div class="rr"><span class="b" style="width:${(x.M/mxp*100).toFixed(1)}%"></span><span class="num">${x.M}</span></div></div>`).join("")}</div></div>
-    <div class="card"><h3>Coureurs par catégorie</h3><p class="cap">Coureurs différents sur la saison.</p>${LEG_FM}
-      ${hbars(catKeys.map(c=>({label:CAT_NAME[c]||c,vals:[catCount[c].F,catCount[c].M],tip:`${CAT_NAME[c]||c} : ${catCount[c].F} femmes, ${catCount[c].M} hommes`})),Math.max(...catKeys.map(c=>catCount[c].F+catCount[c].M),1),["var(--f)","var(--m)"])}</div>
-    <div class="card"><h3>Répartition des temps · cross long</h3><p class="cap">Nombre d'arrivées par tranche de 2 minutes, toutes manches du cross long.</p>${LEG_FM}${histo}</div>
     <div class="card"><h3>Fidélité</h3><p class="cap">Nombre de coureurs selon le nombre de cross courus.</p>
       ${hbars(Object.keys(fid).map(Number).sort((a,b)=>b-a).map(k=>({label:`${k} cross`,vals:[fid[k]],tip:`${fid[k]} coureurs ont couru ${k} cross`})),maxFid,["var(--green)"])}</div>
+    <div class="card wide"><h3>Meilleurs temps de la saison</h3><p class="cap">Toutes manches confondues.</p>
+      <div class="podiums">${podium("Cross long · hommes",best("long","M"))}${podium("Cross long · femmes",best("long","F"))}${podium("Cross court · femmes",best("court","F"))}</div></div>
+    <div class="card"><h3>Entreprises les plus représentées</h3><p class="cap">Coureurs différents sur la saison (hors individuels). Cliquez pour voir l'équipe.</p>${LEG_FM}
+      ${hbars(topClubs.map(c=>({label:c.club,labelHtml:`<span data-club="${esc(c.club)}" style="cursor:pointer">${esc(c.club)}</span>`,vals:[c.F,c.M],tip:`${c.club} : ${c.F+c.M} coureurs (${c.F} F, ${c.M} H), ${c.parts} participations`})),maxC,["var(--f)","var(--m)"])}</div>
+    <div class="card"><h3>Coureurs par catégorie</h3><p class="cap">Coureurs différents sur la saison.</p>${LEG_FM}
+      ${hbars(catKeys.map(c=>({label:CAT_NAME[c]||c,vals:[catCount[c].F,catCount[c].M],tip:`${CAT_NAME[c]||c} : ${catCount[c].F} femmes, ${catCount[c].M} hommes`})),Math.max(...catKeys.map(c=>catCount[c].F+catCount[c].M),1),["var(--f)","var(--m)"])}</div>
+    <div class="card"><h3>Pyramide des âges</h3><p class="cap">Coureurs différents par tranche d'âge.</p>${LEG_FM}
+      <div class="pyr">${pyr.slice().reverse().map(x=>`<div class="row" data-tip="${x.l} ans : ${x.F} femmes, ${x.M} hommes"><div class="l"><span class="num">${x.F}</span><span class="b" style="width:${(x.F/mxp*100).toFixed(1)}%"></span></div><div class="mid">${x.l}</div><div class="rr"><span class="b" style="width:${(x.M/mxp*100).toFixed(1)}%"></span><span class="num">${x.M}</span></div></div>`).join("")}</div></div>
+    <div class="card"><h3>Répartition des temps · cross long</h3><p class="cap">Nombre d'arrivées par tranche de 2 minutes, toutes manches du cross long.</p>${LEG_FM}${histo}</div>
   </div>`;
 }
 

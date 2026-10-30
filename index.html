@@ -252,6 +252,37 @@ tbody tr.click:hover td{background:var(--surface-3)}
 }
 @media (max-width:640px){.hide-sm{display:none}th,td{padding:9px 9px}.rl-row{padding:16px}.card{padding:18px}.club{max-width:150px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* Rejouer la course */
+.rp{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px;align-items:start}
+.rp-left{display:flex;flex-direction:column;gap:16px;min-width:0}
+.rp-box input.field{flex:none}
+.rp-mapwrap{position:relative;border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow);background:var(--surface-2)}
+.rp-map{height:min(68vh,640px);min-height:380px;width:100%}
+.rp-cv{position:absolute;inset:0;pointer-events:none;z-index:450}
+.rp-clock{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:460;background:rgba(37,39,37,.88);color:#fff;border-radius:999px;padding:7px 16px;text-align:center;line-height:1.2;white-space:nowrap}
+.rp-clock #rpclock{font-family:var(--display);font-size:22px;font-variant-numeric:tabular-nums;display:block}
+.rp-sub{font-size:11.5px;opacity:.85}
+.rp-layers{position:absolute;bottom:26px;left:12px;z-index:460;box-shadow:var(--shadow)}
+.rp-tip{position:absolute;z-index:470;background:var(--surface);border-radius:var(--r);box-shadow:0 10px 30px rgba(0,0,0,.2);padding:10px 12px;font-size:13px;max-width:220px;line-height:1.45}
+.rp-tip .btn{margin-top:6px}
+.rp-controls{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.rp-controls input[type=range]{flex:1 1 220px;accent-color:var(--green)}
+.rp-play{width:46px;height:46px;padding:0;border-radius:999px;font-size:16px}
+.rp-side{display:flex;flex-direction:column;gap:16px}
+.rp-box{background:var(--surface-2);border-radius:var(--r-lg);padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.rp-box h3{font-size:17px}
+.rp-hits{display:flex;flex-direction:column;gap:2px;background:var(--surface);border-radius:var(--r);padding:4px}
+.rp-hits button{border:0;background:none;text-align:left;padding:7px 8px;border-radius:8px;font-size:13.5px}
+.rp-hits button:hover{background:var(--surface-2)}
+.rp-me{background:var(--amber-soft);border-radius:var(--r);padding:10px 12px;font-size:13.5px;line-height:1.5}
+.rp-me .btn{margin-top:8px}
+.rp-board{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:13px}
+.rp-board li{display:grid;grid-template-columns:28px 1fr auto;gap:6px;align-items:center;background:var(--surface);border-radius:8px;padding:6px 10px;cursor:pointer}
+.rp-board li span:nth-child(2){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rp-board li.me{background:var(--amber-soft);font-weight:700}
+.rp-board li.gap{background:none;cursor:default;display:block;text-align:center;color:var(--ink-3);padding:0}
+@media (max-width:900px){.rp{grid-template-columns:1fr}.rp-clock{padding:5px 12px}.rp-clock #rpclock{font-size:18px}.rp-sub{font-size:10.5px}.rp-map{height:58vh}}
 </style>
 
 </head>
@@ -364,11 +395,11 @@ async function loadData(){
     await Promise.all(idx.races.map(async m=>{
       const c=await fetch("data/"+m.file,{cache:"no-cache"}).then(r=>r.json());
       for(const [d,D] of Object.entries(c.dists)){S.rows[m.n+"|"+d]=D.rows.map(unpackRow);S.teams[m.n+"|"+d]=D.teams.map(unpackTeam)}
-      S.races[m.n]={n:m.n,date:m.date,dists:m.dists};S.loaded[m.n]=1;
+      S.races[m.n]={n:m.n,date:m.date,dists:m.dists,track:m.track};S.loaded[m.n]=1;
     }));
     $("#syncState").textContent=idx.updated?"Mis à jour le "+new Date(idx.updated).toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"})+".":"";
   }catch(e){console.error(e);$("#syncState").textContent="Les résultats n'ont pas pu être chargés. Rechargez la page."}
-  render();
+  S.ready=true;render();
 }
 
 /* ---------- Index coureurs / entreprises sur la saison ---------- */
@@ -465,13 +496,13 @@ function distSeg(cur,avail,attr){return`<div class="seg" role="group" aria-label
 
 function pageCourse(){
   const n=S.race;const meta=S.races[n];const cal=calOf(n);const avail=Object.keys(meta.dists);
-  const tabs=[...avail.sort((a,b)=>a==="long"?-1:1).map(d=>[d,DIST_LABEL[d]]),["equipes","Équipes"]];
+  const tabs=[...avail.sort((a,b)=>a==="long"?-1:1).map(d=>[d,DIST_LABEL[d]]),["equipes","Équipes"],...(meta.track?[["replay","Rejouer la course"]]:[])];
   if(!tabs.some(t=>t[0]===S.rtab))S.rtab=tabs[0][0];
   const head=`<a class="back" href="#accueil" data-go="accueil">← Tous les cross</a>
   <div class="pagehead"><div><h2>Cross N°${n} · ${esc(cal.lieu||"")}</h2><div class="sub">${meta.date?fmtDateLong(meta.date):""}</div></div>
     <a class="btn primary" href="${cal.url}" target="_blank" rel="noopener">En savoir plus</a></div>
   <div class="tabs" role="tablist">${tabs.map(([k,l])=>`<button class="tab" role="tab" data-rtab="${k}" aria-selected="${S.rtab===k}">${l}</button>`).join("")}</div>`;
-  return head+(S.rtab==="equipes"?raceTeams(n,avail):raceTable(n,S.rtab));
+  return head+(S.rtab==="replay"?replayHtml(n):S.rtab==="equipes"?raceTeams(n,avail):raceTable(n,S.rtab));
 }
 function raceTable(n,d){
   const meta=S.races[n];const all=S.rows[n+"|"+d]||[];
@@ -628,6 +659,155 @@ function pageStats(){
   </div>`;
 }
 
+/* ---------- Rejouer la course (carte animée) ---------- */
+const RACE_START={court:9*3600+15*60,long:9*3600+45*60}; // départs officiels 9h15 et 9h45
+let LEAFLET=null;
+function loadLeaflet(){
+  if(LEAFLET)return LEAFLET;
+  LEAFLET=new Promise((ok,ko)=>{
+    const l=document.createElement("link");l.rel="stylesheet";l.href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";document.head.appendChild(l);
+    const s=document.createElement("script");s.src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";s.onload=ok;s.onerror=()=>ko(new Error("Carte indisponible"));document.head.appendChild(s);
+  });
+  return LEAFLET;
+}
+const RP={on:false};
+const clock=s=>{s=Math.max(0,Math.round(s));return String(Math.floor(s/3600)).padStart(2,"0")+"h"+String(Math.floor(s%3600/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")};
+function replayHtml(n){
+  return`<div class="rp">
+    <div class="rp-left"><div class="rp-mapwrap"><div id="rpmap" class="rp-map" aria-label="Carte du parcours"></div><canvas id="rpcv" class="rp-cv"></canvas>
+      <div class="rp-clock"><span id="rpclock">09h15:00</span><span class="rp-sub" id="rpsub"></span></div>
+      <div class="rp-layers seg"><button type="button" data-rpl="plan" aria-pressed="true">Plan</button><button type="button" data-rpl="sat" aria-pressed="false">Satellite</button></div>
+      <div id="rptip" class="rp-tip" hidden></div></div>
+    <div class="rp-controls">
+      <button class="btn primary rp-play" id="rpplay" type="button" aria-label="Lecture">▶</button>
+      <input id="rpslider" type="range" min="0" max="100" value="0" step="1" aria-label="Heure de la course">
+      <div class="seg" role="group" aria-label="Vitesse">${[10,30,60,120].map(v=>`<button type="button" data-rps="${v}" aria-pressed="${v===30}">×${v}</button>`).join("")}</div>
+    </div></div>
+    <div class="rp-side">
+      <div class="rp-box">
+        <h3>Suivre un coureur</h3>
+        <input class="field" id="rpq" type="search" placeholder="Nom ou dossard" autocomplete="off" style="width:100%">
+        <div id="rpqres"></div>
+        <div id="rpfollow"></div>
+      </div>
+      <div class="rp-box">
+        <h3>Suivre une équipe</h3>
+        <select class="field" id="rpteam" style="width:100%"><option value="">Aucune</option></select>
+      </div>
+      <div class="rp-box">
+        <div class="seg" role="group" aria-label="Course affichée">${["long","court"].filter(d=>S.races[n].dists[d]).map(d=>`<button type="button" data-rpd="${d}" aria-pressed="${d==="long"}">${DIST_LABEL[d]}</button>`).join("")}</div>
+        <ol id="rpboard" class="rp-board"></ol>
+      </div>
+      <p class="note">Chaque coureur avance à allure régulière, d'après son temps officiel : sa position réelle a pu varier en cours de route. Départs : 9h15 (court), 9h45 (long). Tracé : relevé GPS d'un participant.</p>
+    </div>
+  </div>`;
+}
+function rpPathCum(P){const c=[0];for(let i=1;i<P.length;i++){const a=P[i-1],b=P[i];const R=6371000,r=Math.PI/180;const dLa=(b[0]-a[0])*r,dLo=(b[1]-a[1])*r;const x=Math.sin(dLa/2)**2+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin(dLo/2)**2;c.push(c[i-1]+2*R*Math.asin(Math.sqrt(x)))}return c}
+function rpAt(path,f){const P=path.P,C=path.C,d=Math.min(1,Math.max(0,f))*C[C.length-1];let lo=0,hi=C.length-1;while(hi-lo>1){const m=(lo+hi)>>1;if(C[m]<=d)lo=m;else hi=m}const k=C[hi]>C[lo]?(d-C[lo])/(C[hi]-C[lo]):0;return[P[lo][0]+(P[hi][0]-P[lo][0])*k,P[lo][1]+(P[hi][1]-P[lo][1])*k]}
+async function rpStart(n){
+  rpStop();
+  const meta=S.races[n];const host=$("#rpmap");if(!host)return;
+  RP.on=true;RP.n=n;RP.t=RACE_START.court;RP.speed=30;RP.playing=false;RP.dist="long";RP.follow=null;RP.team="";
+  try{
+    const [tr]=await Promise.all([fetch("data/"+meta.track,{cache:"no-cache"}).then(r=>r.json()),loadLeaflet()]);
+    if(!RP.on||RP.n!==n)return;
+    RP.paths={};for(const d of ["long","court"])if(tr[d]&&S.rows[n+"|"+d])RP.paths[d]={P:tr[d],C:rpPathCum(tr[d])};
+    RP.runners=[];for(const d of Object.keys(RP.paths))for(const r of S.rows[n+"|"+d])RP.runners.push({r,d,start:RACE_START[d]});
+    RP.end=Math.max(...RP.runners.map(x=>x.start+x.r.t))+120;
+    const map=L.map(host,{zoomControl:true,attributionControl:true,preferCanvas:true});RP.map=map;
+    RP.layers={plan:L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}),
+      sat:L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:19,attribution:"Imagerie © Esri"})};
+    RP.layers.plan.addTo(map);
+    const main=RP.paths.long||RP.paths.court;
+    if(RP.paths.long)L.polyline(RP.paths.long.P,{color:"#ffffff",weight:9,opacity:.85}).addTo(map);
+    L.polyline(main.P,{color:"#3bab35",weight:4,opacity:.95}).addTo(map);
+    L.circleMarker(main.P[0],{radius:7,color:"#fff",weight:3,fillColor:"#252725",fillOpacity:1}).addTo(map).bindTooltip("Départ / arrivée");
+    map.fitBounds(L.latLngBounds(main.P),{padding:[30,30]});
+    const sl=$("#rpslider");sl.min=RACE_START.court-60;sl.max=RP.end;sl.value=RP.t;
+    const teams=[...new Set(RP.runners.filter(x=>!isIND(x.r.club)).map(x=>x.r.club))].sort((a,b)=>a.localeCompare(b,"fr"));
+    $("#rpteam").innerHTML=`<option value="">Aucune</option>`+teams.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("");
+    const cv=$("#rpcv");RP.cv=cv;RP.ctx=cv.getContext("2d");
+    const resize=()=>{const r=host.getBoundingClientRect(),dp=window.devicePixelRatio||1;cv.width=r.width*dp;cv.height=r.height*dp;cv.style.width=r.width+"px";cv.style.height=r.height+"px";RP.ctx.setTransform(dp,0,0,dp,0,0);rpDraw()};
+    RP.resize=resize;window.addEventListener("resize",resize);map.on("move zoom",rpDraw);resize();
+    map.on("click",e=>rpPick(e.containerPoint));
+    RP.last=performance.now();RP.lastBoard=0;RP.raf=requestAnimationFrame(rpTick);
+    rpBoard();
+  }catch(e){console.error(e);host.innerHTML=`<div class="empty-r" style="padding:30px">La carte n'a pas pu être chargée. Vérifiez votre connexion puis rechargez la page.</div>`}
+}
+function rpStop(){RP.on=false;if(RP.raf)cancelAnimationFrame(RP.raf);if(RP.resize)window.removeEventListener("resize",RP.resize);if(RP.map){RP.map.remove();RP.map=null}}
+function rpTick(now){
+  if(!RP.on)return;
+  const dt=(now-RP.last)/1000;RP.last=now;
+  if(RP.playing){RP.t+=dt*RP.speed;if(RP.t>=RP.end){RP.t=RP.end;RP.playing=false;$("#rpplay").textContent="▶"}const sl=$("#rpslider");if(sl)sl.value=RP.t}
+  rpDraw();
+  if(now-RP.lastBoard>300){RP.lastBoard=now;rpBoard();if(RP.follow&&RP.playing){const p=rpPos(RP.follow);RP.map.panTo(p,{animate:true,duration:.3})}}
+  RP.raf=requestAnimationFrame(rpTick);
+}
+const rpFrac=x=>Math.min(1,Math.max(0,(RP.t-x.start)/x.r.t));
+const rpPos=x=>rpAt(RP.paths[x.d],rpFrac(x));
+function rpDraw(){
+  if(!RP.on||!RP.map||!RP.ctx)return;
+  const ctx=RP.ctx,map=RP.map,w=RP.cv.width,h=RP.cv.height;ctx.clearRect(0,0,w,h);
+  const hl=x=>(RP.team&&x.r.club===RP.team)||(RP.follow&&x===RP.follow);
+  const dim=!!(RP.team||RP.follow);
+  RP.pts=[];
+  for(const pass of [0,1])for(const x of RP.runners){
+    const special=hl(x);if((pass===0)===special)continue;
+    const p=map.latLngToContainerPoint(rpPos(x));const done=RP.t>=x.start+x.r.t;
+    RP.pts.push([p.x,p.y,x]);
+    ctx.beginPath();
+    if(x===RP.follow){ctx.arc(p.x,p.y,9,0,7);ctx.fillStyle="#ffb220";ctx.fill();ctx.lineWidth=3;ctx.strokeStyle="#252725";ctx.stroke();continue}
+    ctx.arc(p.x,p.y,special?6:4,0,7);
+    ctx.globalAlpha=special?1:dim?.25:done?.45:.9;
+    ctx.fillStyle=x.r.sx==="F"?"#d4145d":"#0391da";ctx.fill();
+    ctx.lineWidth=special?2.5:1;ctx.strokeStyle="#ffffff";ctx.stroke();ctx.globalAlpha=1;
+  }
+  if(RP.follow){const p=map.latLngToContainerPoint(rpPos(RP.follow));const nm=masked(RP.follow.r)?"Coureur masqué":splitName(RP.follow.r.nom).nom+" "+splitName(RP.follow.r.nom).prenom;
+    ctx.font="700 13px 'Open Sans',sans-serif";const tw=ctx.measureText(nm).width;ctx.fillStyle="rgba(37,39,37,.9)";ctx.beginPath();ctx.roundRect(p.x+12,p.y-24,tw+14,22,6);ctx.fill();ctx.fillStyle="#fff";ctx.fillText(nm,p.x+19,p.y-8)}
+  const c=$("#rpclock");if(c)c.textContent=clock(RP.t);
+  const sub=$("#rpsub");if(sub){const lab=d=>{const e=RP.t-RACE_START[d];if(!RP.paths[d])return"";if(e<0)return`${d==="long"?"Long":"Court"} : départ dans ${Math.ceil(-e/60)} min`;const arr=RP.runners.filter(x=>x.d===d&&RP.t>=x.start+x.r.t).length,tot=RP.runners.filter(x=>x.d===d).length;return`${d==="long"?"Long":"Court"} : ${arr}/${tot} arrivés`};sub.textContent=["court","long"].map(lab).filter(Boolean).join(" · ")}
+}
+function rpBoard(){
+  const ol=$("#rpboard");if(!ol)return;const d=RP.dist;
+  const list=RP.runners.filter(x=>x.d===d).map(x=>({x,f:rpFrac(x)})).sort((a,b)=>b.f-a.f||a.x.r.t-b.x.r.t);
+  if(RP.t<RACE_START[d]){ol.innerHTML=`<li class="muted">Départ à ${clock(RACE_START[d]).slice(0,5)}.</li>`;return}
+  const row=(o,i)=>`<li class="${o.x===RP.follow?"me":""}" data-rpf="${RP.runners.indexOf(o.x)}"><b>${i+1}</b><span>${masked(o.x.r)?"Coureur masqué":esc(o.x.r.nom)}</span><span class="muted">${o.f>=1?fmtT(o.x.r.t):Math.round(o.f*100)+" %"}</span></li>`;
+  let html=list.slice(0,10).map(row).join("");
+  if(RP.follow&&RP.follow.d===d){const i=list.findIndex(o=>o.x===RP.follow);if(i>=10)html+=`<li class="gap">…</li>`+row(list[i],i)}
+  ol.innerHTML=html;
+}
+function rpSetFollow(x){
+  RP.follow=x;const box=$("#rpfollow");
+  if(x){RP.dist=x.d;document.querySelectorAll("[data-rpd]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.rpd===x.d));
+    box.innerHTML=`<div class="rp-me"><span class="bib">${x.r.dos}</span> <b>${esc(x.r.nom)}</b><br><span class="muted">${esc(x.r.club)} · ${DIST_LABEL[x.d]} · ${fmtT(x.r.t)} · ${x.r.clt}e</span><br><button class="btn small" type="button" data-rpf="-1">Ne plus suivre</button></div>`;
+    if(RP.t<x.start)RP.t=x.start;RP.map.setView(rpPos(x),Math.max(RP.map.getZoom(),16))}
+  else box.innerHTML="";
+  $("#rpq").value="";$("#rpqres").innerHTML="";rpBoard();rpDraw();
+}
+function rpPick(pt){
+  let best=null,bd=144;for(const [x,y,o] of RP.pts||[]){const d=(x-pt.x)**2+(y-pt.y)**2;if(d<bd){bd=d;best=o}}
+  const tip=$("#rptip");if(!best){tip.hidden=true;return}
+  tip.hidden=false;tip.style.left=Math.min(pt.x+12,RP.cv.clientWidth-230)+"px";tip.style.top=(pt.y+12)+"px";
+  tip.innerHTML=masked(best.r)?`Coureur masqué · ${fmtT(best.r.t)}`:`<b>${esc(best.r.nom)}</b><br>${esc(best.r.club)}<br>${DIST_LABEL[best.d]} · ${best.r.clt}e en ${fmtT(best.r.t)}<br><button class="btn small" type="button" data-rpf="${RP.runners.indexOf(best)}">Suivre</button>`;
+}
+document.addEventListener("click",e=>{
+  if(!RP.on)return;const t=e.target.closest("[data-rpl],[data-rps],[data-rpd],[data-rpf],#rpplay");if(!t)return;
+  e.stopPropagation();const a=t.dataset;
+  if(t.id==="rpplay"){if(RP.t>=RP.end)RP.t=RACE_START.court-60;RP.playing=!RP.playing;t.textContent=RP.playing?"❚❚":"▶";t.setAttribute("aria-label",RP.playing?"Pause":"Lecture");return}
+  if(a.rpl){for(const k in RP.layers)RP.map.removeLayer(RP.layers[k]);RP.layers[a.rpl].addTo(RP.map).bringToBack();document.querySelectorAll("[data-rpl]").forEach(b=>b.setAttribute("aria-pressed",b===t));return}
+  if(a.rps){RP.speed=+a.rps;document.querySelectorAll("[data-rps]").forEach(b=>b.setAttribute("aria-pressed",b===t));return}
+  if(a.rpd){RP.dist=a.rpd;document.querySelectorAll("[data-rpd]").forEach(b=>b.setAttribute("aria-pressed",b===t));rpBoard();return}
+  if(a.rpf!==undefined){$("#rptip").hidden=true;rpSetFollow(+a.rpf<0?null:RP.runners[+a.rpf]);return}
+},true);
+document.addEventListener("input",e=>{
+  if(!RP.on)return;
+  if(e.target.id==="rpslider"){RP.t=+e.target.value;rpDraw();rpBoard()}
+  if(e.target.id==="rpq"){const q=norm(e.target.value).trim();const box=$("#rpqres");if(q.length<2){box.innerHTML="";return}
+    const hits=RP.runners.filter(x=>!masked(x.r)&&(norm(x.r.nom).includes(q)||String(x.r.dos)===q)).slice(0,6);
+    box.innerHTML=`<div class="rp-hits">${hits.map(x=>`<button type="button" data-rpf="${RP.runners.indexOf(x)}"><span class="bib">${x.r.dos}</span> ${esc(x.r.nom)} <span class="muted">${x.d==="long"?"long":"court"}</span></button>`).join("")||`<span class="muted">Aucun coureur trouvé.</span>`}</div>`}
+});
+document.addEventListener("change",e=>{if(RP.on&&e.target.id==="rpteam"){RP.team=e.target.value;rpDraw()}});
+
 function pageMentions(){
   return`<a class="back" href="#accueil" data-go="accueil">← Accueil</a>
   <div class="pagehead"><div><h2>Mentions légales et données personnelles</h2></div></div>
@@ -651,12 +831,14 @@ function pageMentions(){
 }
 /* ---------- Rendu principal ---------- */
 function render(){
+  if(RP.on)rpStop();
   const v=$("#view");
-  if(S.view==="course"&&(!S.race||!S.loaded[S.race]))S.view="accueil";
+  if(S.view==="course"&&(!S.race||!S.loaded[S.race])){if(!S.ready){v.innerHTML=`<div class="empty"><h2>Chargement…</h2></div>`;return}S.view="accueil"}
   const fid=document.activeElement&&document.activeElement.id;const caret=document.activeElement&&document.activeElement.selectionStart;
   v.innerHTML=S.view==="course"?pageCourse():S.view==="saison"?pageSaison():S.view==="stats"?pageStats():S.view==="mentions"?pageMentions():pageAccueil();
   if(fid&&["q","sq","gq"].includes(fid)){const el=document.getElementById(fid);if(el){el.focus();try{el.setSelectionRange(caret,caret)}catch(e){}}}
   if(S.view==="accueil")renderSearch();
+  if(S.view==="course"&&S.rtab==="replay")rpStart(S.race);
 }
 function go(view,opts={}){
   S.view=view;S.limit=150;if(opts.race)S.race=opts.race;if(opts.rtab)S.rtab=opts.rtab;
@@ -753,6 +935,7 @@ document.addEventListener("pointermove",e=>{
 const h=(location.hash||"").slice(1);
 if(["accueil","saison","stats","mentions"].includes(h))S.view=h;
 else if(/^course\d+$/.test(h)){S.view="course";S.race=+h.slice(6)}
+else if(/^replay\d+$/.test(h)){S.view="course";S.race=+h.slice(6);S.rtab="replay"}
 render();loadData();
 </script>
 

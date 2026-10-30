@@ -87,6 +87,28 @@ for(const f of fs.readdirSync(pdfDir).filter(f=>/\.pdf$/i.test(f)).sort()){
   fs.writeFileSync(path.join(dataDir,`cross-${p.n}.json`),JSON.stringify(out));
   fs.unlinkSync(path.join(pdfDir,f)); // le PDF n'est pas conservé dans le dépôt public
 }
+// Tracés GPX : gpx/*.gpx (nom contenant le numéro du cross, ex. cross-1.gpx ou "Cross corpo #1").
+// On ne garde que les coordonnées (pas les horaires ni l'altitude), puis le GPX est supprimé.
+// Le tracé du cross long sert aussi au cross court : premier tour détecté (retour au départ après 3 km).
+const gpxDir=path.join(ROOT,"gpx");
+const hav=(a,b)=>{const R=6371000,r=Math.PI/180;const dLa=(b[0]-a[0])*r,dLo=(b[1]-a[1])*r;const x=Math.sin(dLa/2)**2+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin(dLo/2)**2;return 2*R*Math.asin(Math.sqrt(x))};
+function simplify(P,step=4){const out=[P[0]];let acc=0;for(let i=1;i<P.length;i++){acc+=hav(P[i-1],P[i]);if(acc>=step){out.push(P[i]);acc=0}}if(out[out.length-1]!==P[P.length-1])out.push(P[P.length-1]);return out.map(([a,b])=>[+a.toFixed(6),+b.toFixed(6)])}
+function firstLap(P){let cum=0;for(let i=1;i<P.length;i++){cum+=hav(P[i-1],P[i]);if(cum>3000&&hav(P[i],P[0])<60)return P.slice(0,i+1)}return null}
+if(fs.existsSync(gpxDir))for(const f of fs.readdirSync(gpxDir).filter(f=>/\.gpx$/i.test(f))){
+  const s=fs.readFileSync(path.join(gpxDir,f),"utf8");
+  const name=(s.match(/<name>([^<]*)<\/name>/)||[])[1]||"";
+  const num=(f.match(/(\d+)/)||name.match(/#\s*(\d+)/)||name.match(/(\d+)/)||[])[1];
+  const P=[...s.matchAll(/<trkpt[^>]*lat="([-\d.]+)"[^>]*lon="([-\d.]+)"/g)].map(m=>[+m[1],+m[2]]);
+  if(!num||P.length<10){console.error(`✗ ${f} : numéro de cross ou tracé introuvable`);failed=true;continue}
+  const len=P.slice(1).reduce((s,p,i)=>s+hav(P[i],p),0);
+  const tp=path.join(dataDir,`track-${num}.json`);let tr={};try{tr=JSON.parse(fs.readFileSync(tp))}catch{}
+  const isCourt=/court/i.test(f+name)||len<6000;
+  if(isCourt)tr.court=simplify(P);else{tr.long=simplify(P);const lap=firstLap(P);if(lap&&!tr.courtFromFile)tr.court=simplify(lap)}
+  if(isCourt)tr.courtFromFile=true;
+  fs.writeFileSync(tp,JSON.stringify(tr));fs.unlinkSync(path.join(gpxDir,f));
+  console.log(`✓ ${f} → tracé du cross N°${num} (${Math.round(len)} m${isCourt?", cross court":""})`);
+}
+
 // Minimisation et droit d'opposition, appliqués à tous les cross publiés.
 // - l'année de naissance est remplacée par une tranche d'âge ;
 // - les dossards listés dans le secret GitHub EXCLUSIONS (ex. "1234,5678") sont masqués.
@@ -109,7 +131,7 @@ for(const f of fs.readdirSync(dataDir).filter(f=>/^cross-\d+\.json$/.test(f))){
 if(maskedCount)console.log(`${maskedCount} résultat(s) masqué(s)`);
 
 const races=fs.readdirSync(dataDir).filter(f=>/^cross-\d+\.json$/.test(f)).map(f=>JSON.parse(fs.readFileSync(path.join(dataDir,f)))).sort((a,b)=>a.n-b.n)
-  .map(r=>({n:r.n,date:r.date,file:`cross-${r.n}.json`,dists:Object.fromEntries(Object.entries(r.dists).map(([d,D])=>[d,{km:D.km,count:D.rows.length}]))}));
+  .map(r=>({n:r.n,date:r.date,file:`cross-${r.n}.json`,track:fs.existsSync(path.join(dataDir,`track-${r.n}.json`))?`track-${r.n}.json`:undefined,dists:Object.fromEntries(Object.entries(r.dists).map(([d,D])=>[d,{km:D.km,count:D.rows.length}]))}));
 const idxPath=path.join(dataDir,"index.json");
 let prev=null;try{prev=JSON.parse(fs.readFileSync(idxPath))}catch{}
 const same=prev&&JSON.stringify(prev.races)===JSON.stringify(races);

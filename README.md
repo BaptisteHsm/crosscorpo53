@@ -12,6 +12,15 @@ Pour corriger un cross, redéposer un PDF du même cross : il remplace le préc�
 Le PDF est supprimé du dépôt une fois lu : seuls les résultats extraits (sans année de naissance) sont publiés.
 Seul le propriétaire du dépôt peut déposer des fichiers, donc personne d'autre ne peut modifier les résultats.
 
+## Ajouter le tracé d'un cross (« Rejouer la course »)
+
+1. Exporter le GPX de la course (Strava : activité → ⋯ → Exporter le GPX).
+2. Le renommer avec le numéro du cross, par exemple `cross-2.gpx`, et le déposer dans le dossier `gpx/` (Add file → Upload files).
+3. L'onglet « Rejouer la course » apparaît sur la page du cross après la mise à jour.
+
+Le GPX du cross long sert aussi pour le cross court (premier tour). Pour un parcours court différent, déposer un second fichier nommé par exemple `cross-2-court.gpx`.
+Seules les coordonnées du tracé sont conservées : les horaires et le GPX d'origine sont supprimés.
+
 ## Retirer un coureur (droit d'opposition)
 
 1. Sur GitHub : **Settings → Secrets and variables → Actions → New repository secret** (ou modifier le secret existant).

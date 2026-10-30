@@ -1,10 +1,11 @@
 {
- "updated": "2026-10-25T21:47:38.344Z",
+ "updated": "2026-10-30T20:12:19.071Z",
  "races": [
   {
    "n": 1,
    "date": "2026-10-25",
    "file": "cross-1.json",
+   "track": "track-1.json",
    "dists": {
     "court": {
      "km": 4.5,

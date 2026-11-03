@@ -170,7 +170,7 @@ tbody tr.click:hover td{background:var(--surface-3)}
 .chgroup .seg{background:var(--surface)}
 
 /* Statistiques */
-.aud{display:flex;flex-wrap:wrap;gap:12px 32px;align-items:center;background:var(--ink);color:#fff;border-radius:var(--r-lg);padding:18px 24px;margin-bottom:20px}
+.aud{display:flex;flex-wrap:wrap;gap:12px 32px;align-items:center;background:var(--ink);color:#fff;border-radius:var(--r-lg);padding:18px 24px;margin-top:24px}
 .aud[hidden]{display:none}
 .aud-i{display:flex;align-items:baseline;gap:8px}
 .aud .v{font-family:var(--display);font-size:30px;line-height:1}
@@ -674,11 +674,6 @@ function pageStats(){
   const mxp=Math.max(...pyr.map(x=>Math.max(x.F,x.M)),1);
   const LEG_FM=`<div class="legend"><span><i style="background:var(--f)"></i>Femmes</span><span><i style="background:var(--m)"></i>Hommes</span></div>`;
   return head+`
-  <div class="aud" id="aud" hidden>
-    <div class="aud-i"><span class="pulse" aria-hidden="true"></span><span class="v num" id="aud-now">–</span><span class="k">en ligne maintenant</span></div>
-    <div class="aud-i"><span class="v num" id="aud-vis">–</span><span class="k">visiteurs depuis le 25 octobre</span></div>
-    <div class="aud-i"><span class="v num" id="aud-pv">–</span><span class="k">pages vues</span></div>
-  </div>
   <div class="kpis">
     ${kpi(nf(runners.length),"Coureurs différents",`${nf(nF)} femmes · ${nf(runners.length-nF)} hommes`)}
     ${kpi(nf(parts),"Participations",`${Math.round(partsF/parts*100)} % de femmes`)}
@@ -702,6 +697,11 @@ function pageStats(){
     <div class="card"><h3>Pyramide des âges</h3><p class="cap">Coureurs différents par tranche d'âge.</p>${LEG_FM}
       <div class="pyr">${pyr.slice().reverse().map(x=>`<div class="row" data-tip="${x.l} ans : ${x.F} femmes, ${x.M} hommes"><div class="l"><span class="num">${x.F}</span><span class="b" style="width:${(x.F/mxp*100).toFixed(1)}%"></span></div><div class="mid">${x.l}</div><div class="rr"><span class="b" style="width:${(x.M/mxp*100).toFixed(1)}%"></span><span class="num">${x.M}</span></div></div>`).join("")}</div></div>
     <div class="card"><h3>Répartition des temps · cross long</h3><p class="cap">Nombre d'arrivées par tranche de 2 minutes, toutes manches du cross long.</p>${LEG_FM}${histo}</div>
+  </div>
+  <div class="aud" id="aud" hidden>
+    <div class="aud-i"><span class="pulse" aria-hidden="true"></span><span class="v num" id="aud-now">–</span><span class="k">en ligne maintenant</span></div>
+    <div class="aud-i"><span class="v num" id="aud-vis">–</span><span class="k">visiteurs depuis le 25 octobre</span></div>
+    <div class="aud-i"><span class="v num" id="aud-pv">–</span><span class="k">pages vues</span></div>
   </div>`;
 }
 

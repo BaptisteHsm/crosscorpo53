@@ -584,7 +584,7 @@ async function hmStart(){
       el.innerHTML=`<span>${c.n}</span>`;el.setAttribute("aria-label",`Cross N°${c.n}, ${c.lieu}, ${fmtDateLong(c.date)}`);wrap.appendChild(el);
       const pop=new maplibregl.Popup({offset:22,closeButton:true,maxWidth:"300px"}).setHTML(hmPopup(c));
       const m=new maplibregl.Marker({element:wrap,anchor:"bottom"}).setLngLat(TOWNS[c.n].slice(0,2)).setPopup(pop).addTo(map);wrap.removeAttribute("tabindex");
-      el.addEventListener("click",ev=>{ev.stopPropagation();m.togglePopup()});
+      el.addEventListener("click",ev=>{ev.stopPropagation();HM.markers.forEach(x=>{if(x.m!==m&&x.m.getPopup().isOpen())x.m.togglePopup()});m.togglePopup()});
       return{m,el,c};
     });
     const bounds=new maplibregl.LngLatBounds();DEP53.forEach(p=>bounds.extend(p));HM.bounds=bounds;

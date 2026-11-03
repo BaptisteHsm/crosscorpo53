@@ -553,7 +553,7 @@ function hmPopup(c){
   const status=loaded?`${nf(Object.values(meta.dists).reduce((s,d)=>s+d.count,0))} arrivants`:days>0?`Dans ${days} jour${days>1?"s":""}`:days===0?"Aujourd'hui":"Résultats à venir";
   return`<div class="hp"><div class="hp-n">Cross N°${c.n} · ${fmtDots(c.date)}</div><div class="hp-l">${esc(c.lieu)}</div><div class="hp-s">${status}</div><div class="hp-p">${TOWNS[c.n][2]?"📍 Lieu de départ":"Position approximative : centre de la commune"}</div>
     <div class="hp-logos">${logos}</div>
-    <div class="hp-b">${loaded?`<button class="btn primary" type="button" data-race="${c.n}" data-rtab="long">Résultats</button>`:""}${meta&&meta.track?`<button class="btn primary" type="button" data-race="${c.n}" data-rtab="replay">La course en live</button>`:""}<a class="btn white" href="${c.url}" target="_blank" rel="noopener">En savoir plus</a></div></div>`;
+    <div class="hp-b">${loaded?`<button class="btn primary" type="button" data-race="${c.n}" data-rtab="long">Résultats</button>`:""}${meta&&meta.track?`<button class="btn primary" type="button" data-race="${c.n}" data-rtab="replay">Revivre la course</button>`:""}<a class="btn white" href="${c.url}" target="_blank" rel="noopener">En savoir plus</a></div></div>`;
 }
 async function hmStart(){
   hmStop();const host=document.getElementById("hmap");if(!host)return;
@@ -650,7 +650,7 @@ function pageCourse(){
   if(!tabs.some(t=>t[0]===S.rtab)&&!(S.rtab==="replay"&&meta.track))S.rtab=tabs[0][0];
   const head=`<a class="back" href="#accueil" data-go="accueil">← Tous les cross</a>
   <div class="pagehead"><div><h2>Cross N°${n} · ${esc(cal.lieu||"")}</h2><div class="sub">${meta.date?fmtDateLong(meta.date):""}</div></div>
-    <div class="headbtns">${meta.track?`<button class="btn primary" type="button" data-rtab="replay" ${S.rtab==="replay"?'aria-pressed="true"':""}>La course en live</button>`:""}<a class="btn primary" href="${cal.url}" target="_blank" rel="noopener">En savoir plus</a></div></div>
+    <div class="headbtns">${meta.track?`<button class="btn primary" type="button" data-rtab="replay" ${S.rtab==="replay"?'aria-pressed="true"':""}>Revivre la course</button>`:""}<a class="btn primary" href="${cal.url}" target="_blank" rel="noopener">En savoir plus</a></div></div>
   <div class="tabs" role="tablist">${tabs.map(([k,l])=>`<button class="tab" role="tab" data-rtab="${k}" aria-selected="${S.rtab===k}">${l}</button>`).join("")}</div>`;
   return head+(S.rtab==="replay"?replayHtml(n):S.rtab==="equipes"?raceTeams(n,avail):raceTable(n,S.rtab));
 }

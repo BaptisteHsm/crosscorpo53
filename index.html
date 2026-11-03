@@ -589,7 +589,9 @@ async function hmStart(){
     });
     const bounds=new maplibregl.LngLatBounds();DEP53.forEach(p=>bounds.extend(p));HM.bounds=bounds;
     map.fitBounds(bounds,{padding:{top:30,bottom:30,left:30,right:30},pitch:0,bearing:0,duration:0});
-    map.once("idle",()=>host.classList.add("ready"));
+    const hideAttrib=()=>host.querySelectorAll(".maplibregl-ctrl-attrib.maplibregl-compact-show").forEach(e=>e.classList.remove("maplibregl-compact-show"));
+    hideAttrib();map.on("resize",()=>setTimeout(hideAttrib));
+    map.once("idle",()=>{hideAttrib();host.classList.add("ready")});
     map.setMaxBounds([[bounds.getWest()-.6,bounds.getSouth()-.4],[bounds.getEast()+.6,bounds.getNorth()+.4]]);
   });
 }

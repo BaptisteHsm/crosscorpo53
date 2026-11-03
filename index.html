@@ -560,7 +560,7 @@ async function hmStart(){
   try{await loadMapLibre()}catch(e){host.parentElement.classList.add("hm-off");return}
   if(!document.getElementById("hmap"))return;
   const touch=matchMedia("(pointer:coarse)").matches;
-  const map=new maplibregl.Map({container:host,style:"https://tiles.openfreemap.org/styles/liberty",center:[-0.64,48.15],zoom:8.4,pitch:30,bearing:0,maxPitch:70,
+  const map=new maplibregl.Map({container:host,style:"https://tiles.openfreemap.org/styles/liberty",center:[-0.64,48.15],zoom:8.4,pitch:0,bearing:0,maxPitch:70,
     attributionControl:{compact:true},cooperativeGestures:touch,
     locale:{"CooperativeGesturesHandler.MobileHelpText":"Utilisez deux doigts pour déplacer la carte","CooperativeGesturesHandler.WindowsHelpText":"Ctrl + molette pour zoomer","CooperativeGesturesHandler.MacHelpText":"⌘ + molette pour zoomer"}});
   HM.map=map;map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),"top-right");
@@ -588,7 +588,7 @@ async function hmStart(){
       return{m,el,c};
     });
     const bounds=new maplibregl.LngLatBounds();DEP53.forEach(p=>bounds.extend(p));HM.bounds=bounds;
-    map.fitBounds(bounds,{padding:{top:30,bottom:60,left:30,right:30},pitch:30,bearing:0,duration:0});
+    map.fitBounds(bounds,{padding:{top:30,bottom:30,left:30,right:30},pitch:0,bearing:0,duration:0});
     map.once("idle",()=>host.classList.add("ready"));
     map.setMaxBounds([[bounds.getWest()-.6,bounds.getSouth()-.4],[bounds.getEast()+.6,bounds.getNorth()+.4]]);
   });

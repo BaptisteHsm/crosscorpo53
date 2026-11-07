@@ -842,15 +842,15 @@ async function anStart(n){
     AN.map=map;map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),"bottom-right");
     map.addControl(new maplibregl.FullscreenControl(),"bottom-right");
     map.on("error",e=>console.warn("Carte",e&&e.error&&(e.error.message||e.error)));
-    ["dragstart","wheel","touchstart"].forEach(ev=>map.on(ev,e=>{if(AN.fly&&e.originalEvent)anFlyStop(true)}));
+    ["dragstart","wheel","touchstart"].forEach(ev=>map.on(ev,e=>{if(e.originalEvent)AN.moved=true;if(AN.fly&&e.originalEvent)anFlyStop(true)}));
     const init=()=>{if(AN.inited)return;AN.inited=true;anMarkers();anFit(0);
-      const hide=()=>host.querySelectorAll(".maplibregl-ctrl-attrib.maplibregl-compact-show").forEach(e=>e.classList.remove("maplibregl-compact-show"));hide();map.once("idle",hide)};
+      const hide=()=>host.querySelectorAll(".maplibregl-ctrl-attrib.maplibregl-compact-show").forEach(e=>e.classList.remove("maplibregl-compact-show"));hide();map.once("idle",()=>{hide();if(!AN.fly&&!AN.moved)anFit(500)})};
     map.on("style.load",()=>{anLayers();init()});
     anSetDist(d);
     if(map.isStyleLoaded()){anLayers();init()}
   }catch(e){console.warn(e);const off=document.querySelector(".an-off");if(off)off.hidden=false}
 }
-function anStop(){if(AN.fly){cancelAnimationFrame(AN.fly);AN.fly=null}if(AN.map){AN.map.remove();AN.map=null}AN.mks=[];AN.hover=null;AN.hoverOn=false;AN.prof=null;AN.inited=false}
+function anStop(){if(AN.fly){cancelAnimationFrame(AN.fly);AN.fly=null}if(AN.map){AN.map.remove();AN.map=null}AN.mks=[];AN.hover=null;AN.hoverOn=false;AN.prof=null;AN.inited=false;AN.moved=false}
 
 function pageAccueil(){
   const today=new Date().toISOString().slice(0,10);const has=racesWithData().length>0;

@@ -806,7 +806,7 @@ function anCursor(d){
 }
 function anFly(){
   const map=AN.map;if(!map)return;if(AN.fly){anFlyStop(true);return}
-  const total=AN.cum[AN.cum.length-1];const dur=Math.max(18000,total*3.4);let t0=null,brg=null;
+  const total=AN.cum[AN.cum.length-1];const dur=Math.max(30000,total*7);let t0=null,brg=null;
   const btn=document.getElementById("anfly");if(btn)btn.textContent="■ Arrêter le survol";
   if(!AN.is3d){AN.is3d=true;anLayers();document.querySelectorAll("[data-an3d]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.an3d==="1"))}
   const step=now=>{

@@ -1122,7 +1122,7 @@ async function rpStart(n){
   try{
     const [tr]=await Promise.all([fetch("data/"+meta.track,{cache:"no-cache"}).then(r=>r.json()),loadLeaflet()]);
     if(!RP.on||RP.n!==n)return;
-    RP.paths={};for(const d of ["long","court"])if(tr[d]&&S.rows[n+"|"+d])RP.paths[d]={P:tr[d],C:rpPathCum(tr[d])};
+    RP.paths={};for(const d of ["long","court"])if(tr[d]&&S.rows[n+"|"+d])RP.paths[d]={P:tr[d],C:rpPathCum(tr[d])};document.querySelectorAll("[data-rpd]").forEach(b=>{if(!RP.paths[b.dataset.rpd])b.remove()});
     RP.all=[];for(const d of Object.keys(RP.paths))for(const r of S.rows[n+"|"+d])RP.all.push({r,d,start:RACE_START[d]});
     const map=L.map(host,{zoomControl:true,attributionControl:true,preferCanvas:true});RP.map=map;
     RP.layers={plan:L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}),

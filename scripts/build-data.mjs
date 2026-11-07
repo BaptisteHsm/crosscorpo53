@@ -135,6 +135,8 @@ const races=fs.readdirSync(dataDir).filter(f=>/^cross-\d+\.json$/.test(f)).map(f
 const idxPath=path.join(dataDir,"index.json");
 let prev=null;try{prev=JSON.parse(fs.readFileSync(idxPath))}catch{}
 const same=prev&&JSON.stringify(prev.races)===JSON.stringify(races);
-fs.writeFileSync(idxPath,JSON.stringify({updated:same?prev.updated:new Date().toISOString(),races},null,1));
+// Tracés disponibles, y compris pour les cross pas encore courus (vue « Analyse » du parcours).
+const tracks=fs.readdirSync(dataDir).map(f=>(f.match(/^track-(\d+)\.json$/)||[])[1]).filter(Boolean).map(Number).sort((a,b)=>a-b);
+fs.writeFileSync(idxPath,JSON.stringify({updated:same?prev.updated:new Date().toISOString(),races,tracks},null,1));
 console.log(`index.json : ${races.length} cross`);
 if(failed)process.exit(1);

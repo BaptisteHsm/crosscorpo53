@@ -342,6 +342,55 @@ tbody tr.click:hover td{background:var(--surface-3)}
 .searchzone{margin:6px auto 22px}
 @media (max-width:640px){#hmap{height:64vh;min-height:360px}.hm-play{font-size:14px;padding:7px 12px}}
 @media (prefers-reduced-motion:reduce){.pin{transition:none}}
+
+/* Analyse du parcours */
+.an{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:22px;align-items:start}
+.an-mapwrap{position:relative;border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow);background:#dfe6df}
+.an-map{height:min(80vh,800px);min-height:460px;width:100%}
+.an-ctl{position:absolute;z-index:2;display:flex;gap:8px;flex-wrap:wrap}
+.an-tl{top:12px;left:12px}.an-tr{top:12px;right:12px;justify-content:flex-end}
+.an-glass{background:rgba(255,255,255,.94);box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.an-chip{display:inline-block;background:rgba(255,255,255,.94);box-shadow:0 2px 10px rgba(0,0,0,.18);border-radius:var(--r);padding:7px 12px;font-weight:700;font-size:13.5px}
+.an-fly{position:absolute;left:12px;bottom:12px;z-index:2;box-shadow:0 2px 10px rgba(0,0,0,.25)}
+.an-off[hidden]{display:none}
+.an-off{position:absolute;inset:0;display:grid;place-items:center;color:var(--ink-2);font-weight:600;background:var(--surface-2)}
+.an-side{display:flex;flex-direction:column;gap:16px;min-width:0}
+.an-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.an-stats>div{background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:12px 16px}
+.an-stats span{display:block;font-size:12px;font-weight:700;color:var(--ink-3);letter-spacing:.02em}
+.an-stats b{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.2}
+.an-card{background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:16px 18px;min-width:0}
+.an-h{font-family:var(--display);font-size:19px;margin-bottom:8px}
+.an-prof{position:relative;min-height:170px}
+.an-prof svg{display:block;max-width:100%;height:auto;touch-action:none;cursor:crosshair;overflow:visible}
+.an-grid{stroke:var(--line);stroke-width:1}
+.an-ax{font-size:10.5px;fill:var(--ink-3);font-family:var(--body)}
+.an-cur{stroke:var(--ink);stroke-width:1;stroke-dasharray:3 3}
+.an-tipbox{position:absolute;top:-8px;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap;pointer-events:none}
+.an-unit{font-size:11px;color:var(--ink-3);text-align:right;margin-top:4px}
+.an-wait{height:170px;display:grid;place-items:center;color:var(--ink-3);font-size:13px}
+.an-list{list-style:none;margin:0;padding:0}
+.an-list li{display:flex;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.an-list li:first-child{border-top:0;padding-top:2px}
+.an-list li div{flex:1;min-width:0;font-size:14px;line-height:1.35}
+.an-list li span{color:var(--ink-3);font-size:12.5px}
+.an-list li a{font-size:13px;font-weight:700;color:var(--green-dark);text-decoration:none;white-space:nowrap}
+.an-list li a:hover{text-decoration:underline}
+.an-dot{width:26px;height:26px;border-radius:50%;flex:none;display:grid;place-items:center;font-style:normal;font-weight:800;color:#fff;font-size:13px}
+.an-dot.dep{background:var(--green)}.an-dot.fin{background:var(--ink)}.an-dot.pk{background:#2b6fd6;border-radius:7px}
+.an-foot .btn{width:100%}
+.an-foot .note{margin-top:10px}
+.an-mk{cursor:pointer}
+.an-mk.km{width:24px;height:24px;border-radius:50%;background:#fff;color:var(--ink);border:2px solid var(--ink);font:800 11.5px/20px var(--body);text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.35);cursor:default}
+.an-mk.pk{width:28px;height:28px;border-radius:8px;background:#2b6fd6;color:#fff;font:800 15px/24px var(--body);text-align:center;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+.an-mk.dep,.an-mk.fin{position:relative;display:inline-flex;width:max-content;white-space:nowrap;align-items:center;gap:5px;padding:5px 11px 5px 9px;border-radius:999px;color:#fff;font:700 13px/1.2 var(--body);border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.35);margin-bottom:8px}
+.an-mk.dep::after,.an-mk.fin::after{content:"";position:absolute;left:50%;bottom:-8px;width:2px;height:8px;margin-left:-1px;background:#fff}
+.an-mk.dep{background:var(--green)}.an-mk.fin{background:var(--ink)}
+.an-mk svg{width:13px;height:13px}
+.an-mk.hv{width:18px;height:18px;border-radius:50%;background:var(--amber);border:3px solid #fff;box-shadow:0 0 0 2px rgba(0,0,0,.3);pointer-events:none;cursor:default}
+.an-pop{font-weight:700;font-size:15px;margin:2px 0}
+@media (max-width:980px){.an{grid-template-columns:1fr}.an-map{height:64vh;min-height:400px}}
+@media (max-width:560px){.an-tr{top:58px;right:auto;left:12px;justify-content:flex-start}.an-stats b{font-size:22px}}
 </style>
 
 </head>
@@ -477,6 +526,7 @@ async function loadData(){
       for(const [d,D] of Object.entries(c.dists)){S.rows[m.n+"|"+d]=D.rows.map(unpackRow);S.teams[m.n+"|"+d]=D.teams.map(unpackTeam)}
       S.races[m.n]={n:m.n,date:m.date,dists:m.dists,track:m.track};S.loaded[m.n]=1;
     }));
+    S.tracks=idx.tracks||idx.races.filter(r=>r.track).map(r=>r.n);
     $("#syncState").textContent=idx.updated?"Mis à jour le "+new Date(idx.updated).toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"})+".":"";
   }catch(e){console.error(e);$("#syncState").textContent="Les résultats n'ont pas pu être chargés. Rechargez la page."}
   S.ready=true;render();
@@ -534,7 +584,7 @@ function emptyState(){
 
 /* ---------- Carte 3D de la saison (page d'accueil) ---------- */
 // Lieux de départ : [longitude, latitude, précis ?]. Précis = départ connu (tracé GPS ou page officielle) ; sinon centre de la commune.
-const TOWNS={1:[-0.780025,48.100495,true],2:[-0.70393,48.07769,true],3:[-0.8089,48.0716,true],4:[-0.3539,48.0989,false],5:[-0.7806,47.9861,false],6:[-0.6137,48.3031,false],7:[-0.7700,48.0233,false],8:[-0.7028,47.8286,false],9:[-0.7181,48.1222,false],10:[-0.4500,48.1797,false],11:[-0.7734,48.0706,false]};
+const TOWNS={1:[-0.780025,48.100495,true],2:[-0.719959,48.076929,true],3:[-0.8089,48.0716,true],4:[-0.3539,48.0989,false],5:[-0.7806,47.9861,false],6:[-0.6137,48.3031,false],7:[-0.7700,48.0233,false],8:[-0.7028,47.8286,false],9:[-0.7181,48.1222,false],10:[-0.4500,48.1797,false],11:[-0.7734,48.0706,false]};
 const DEP53=[[-1.0702,48.5085],[-1.0617,48.5106],[-1.0631,48.5132],[-1.0604,48.5149],[-1.053,48.5092],[-1.0394,48.506],[-1.0359,48.5018],[-1.0305,48.5013],[-1.0267,48.4981],[-1.0232,48.4988],[-1.0176,48.4947],[-1.0175,48.4923],[-1.0127,48.4933],[-1.004,48.4892],[-0.9897,48.4938],[-0.9722,48.4946],[-0.9714,48.5007],[-0.9653,48.5008],[-0.9621,48.5042],[-0.9643,48.5108],[-0.9626,48.5132],[-0.9554,48.5173],[-0.9471,48.5144],[-0.9233,48.5134],[-0.9205,48.5096],[-0.9227,48.5033],[-0.9105,48.4992],[-0.9092,48.4967],[-0.8989,48.4976],[-0.8942,48.4946],[-0.8814,48.4993],[-0.8697,48.4982],[-0.8604,48.5015],[-0.8492,48.4978],[-0.8464,48.4995],[-0.8403,48.4931],[-0.8378,48.4846],[-0.8322,48.4826],[-0.8326,48.4794],[-0.8273,48.4792],[-0.8273,48.4763],[-0.8208,48.4757],[-0.8148,48.4721],[-0.8186,48.469],[-0.8143,48.4648],[-0.8162,48.4622],[-0.8127,48.4549],[-0.7992,48.4589],[-0.7966,48.4663],[-0.7845,48.4641],[-0.7779,48.4654],[-0.7777,48.4513],[-0.7798,48.4461],[-0.7754,48.4458],[-0.774,48.4427],[-0.7664,48.4405],[-0.7649,48.4367],[-0.7602,48.4362],[-0.7477,48.4388],[-0.7456,48.4425],[-0.7412,48.4421],[-0.7355,48.4457],[-0.7273,48.4448],[-0.7151,48.449],[-0.7149,48.4543],[-0.7249,48.4553],[-0.7291,48.4597],[-0.7359,48.4611],[-0.7376,48.4646],[-0.7311,48.4728],[-0.7246,48.4732],[-0.715,48.4691],[-0.705,48.4756],[-0.6999,48.4733],[-0.704,48.4703],[-0.7021,48.4672],[-0.6918,48.4681],[-0.6817,48.471],[-0.6853,48.4772],[-0.6753,48.4807],[-0.6766,48.4841],[-0.6704,48.4825],[-0.6688,48.4865],[-0.6662,48.4859],[-0.6601,48.4798],[-0.6625,48.4763],[-0.6567,48.4763],[-0.6557,48.4741],[-0.6597,48.4691],[-0.6536,48.4596],[-0.6558,48.4479],[-0.654,48.4443],[-0.6511,48.444],[-0.625,48.4573],[-0.6156,48.4589],[-0.5953,48.4726],[-0.5733,48.4688],[-0.5648,48.4772],[-0.5596,48.4721],[-0.5517,48.4731],[-0.5499,48.4798],[-0.5402,48.4838],[-0.5374,48.4905],[-0.5304,48.4952],[-0.5216,48.4952],[-0.5164,48.4981],[-0.5169,48.504],[-0.5145,48.5036],[-0.5097,48.509],[-0.5051,48.5058],[-0.5013,48.5072],[-0.5001,48.5042],[-0.4933,48.5018],[-0.4846,48.5042],[-0.4782,48.5016],[-0.4689,48.5083],[-0.4701,48.5119],[-0.4503,48.5129],[-0.4472,48.5154],[-0.4385,48.5117],[-0.4342,48.5138],[-0.4246,48.5095],[-0.4238,48.5068],[-0.4162,48.5079],[-0.4091,48.5056],[-0.3951,48.5103],[-0.3912,48.5087],[-0.3933,48.5011],[-0.383,48.4967],[-0.3716,48.4958],[-0.3667,48.4936],[-0.369,48.4921],[-0.3682,48.4879],[-0.3532,48.4838],[-0.3494,48.4888],[-0.3554,48.4927],[-0.3558,48.4957],[-0.3485,48.5013],[-0.3359,48.5019],[-0.3359,48.5093],[-0.3202,48.5229],[-0.2935,48.515],[-0.2881,48.5193],[-0.2851,48.5173],[-0.2854,48.5068],[-0.2716,48.5074],[-0.2675,48.5135],[-0.2682,48.5169],[-0.2745,48.5178],[-0.264,48.5225],[-0.2612,48.5269],[-0.2509,48.5267],[-0.2413,48.5367],[-0.2464,48.5426],[-0.2626,48.5486],[-0.2464,48.5584],[-0.2487,48.5635],[-0.2426,48.568],[-0.2344,48.5623],[-0.2201,48.5604],[-0.2173,48.5581],[-0.2081,48.5641],[-0.194,48.5548],[-0.19,48.5489],[-0.1807,48.545],[-0.1794,48.5408],[-0.1737,48.5415],[-0.1697,48.537],[-0.1446,48.5277],[-0.1454,48.5206],[-0.1492,48.5187],[-0.155,48.5206],[-0.1631,48.5177],[-0.1725,48.5105],[-0.1708,48.5068],[-0.1721,48.5021],[-0.1681,48.5037],[-0.156,48.4958],[-0.155,48.4866],[-0.1492,48.4802],[-0.1535,48.477],[-0.1473,48.473],[-0.1506,48.4651],[-0.1487,48.4581],[-0.1345,48.4518],[-0.1059,48.4473],[-0.073,48.4505],[-0.0727,48.4569],[-0.0705,48.458],[-0.0513,48.4529],[-0.0504,48.4435],[-0.0573,48.431],[-0.053,48.425],[-0.0576,48.4205],[-0.0525,48.4133],[-0.0578,48.4087],[-0.0551,48.4071],[-0.0563,48.3957],[-0.0527,48.393],[-0.0535,48.3898],[-0.058,48.3875],[-0.0545,48.382],[-0.0592,48.3813],[-0.0597,48.3773],[-0.0625,48.3757],[-0.0709,48.379],[-0.0778,48.369],[-0.0845,48.3701],[-0.0905,48.3752],[-0.0971,48.3733],[-0.1122,48.3743],[-0.1192,48.3672],[-0.1367,48.3643],[-0.1384,48.357],[-0.1319,48.3432],[-0.1217,48.3402],[-0.1222,48.3383],[-0.1478,48.3441],[-0.1571,48.3409],[-0.1542,48.3354],[-0.158,48.3345],[-0.158,48.3215],[-0.1546,48.314],[-0.1484,48.3139],[-0.142,48.3092],[-0.1379,48.2932],[-0.1425,48.2933],[-0.144,48.289],[-0.1498,48.2853],[-0.1482,48.2802],[-0.1557,48.2653],[-0.1608,48.2622],[-0.1673,48.2635],[-0.1635,48.2581],[-0.1628,48.2542],[-0.1659,48.2525],[-0.1625,48.2486],[-0.161,48.2388],[-0.158,48.239],[-0.155,48.2309],[-0.1506,48.2303],[-0.1448,48.224],[-0.1531,48.2147],[-0.1468,48.205],[-0.1645,48.1998],[-0.19,48.1812],[-0.2299,48.1694],[-0.2391,48.165],[-0.241,48.1615],[-0.2526,48.1575],[-0.2484,48.1564],[-0.2483,48.1523],[-0.2457,48.1516],[-0.2377,48.153],[-0.2374,48.1474],[-0.2487,48.1448],[-0.2484,48.14],[-0.2538,48.1365],[-0.2507,48.1343],[-0.2416,48.1377],[-0.2391,48.1359],[-0.2445,48.133],[-0.2468,48.1276],[-0.223,48.1227],[-0.2236,48.1174],[-0.2164,48.1137],[-0.2155,48.108],[-0.2202,48.1061],[-0.2193,48.1045],[-0.2368,48.0979],[-0.2337,48.0912],[-0.2385,48.0851],[-0.2374,48.0829],[-0.2235,48.0802],[-0.2223,48.0778],[-0.2267,48.0727],[-0.2258,48.0705],[-0.2309,48.059],[-0.239,48.062],[-0.2715,48.0652],[-0.2843,48.06],[-0.2799,48.0553],[-0.304,48.0512],[-0.3058,48.0487],[-0.3172,48.0451],[-0.3304,48.0504],[-0.3417,48.0431],[-0.3344,48.033],[-0.3337,48.028],[-0.3415,48.0118],[-0.316,48.0053],[-0.3085,48.0057],[-0.3136,47.9992],[-0.3118,47.995],[-0.3134,47.9941],[-0.3049,47.99],[-0.3064,47.9877],[-0.3015,47.9829],[-0.3038,47.9795],[-0.2987,47.9796],[-0.301,47.9752],[-0.2972,47.9718],[-0.3017,47.9686],[-0.3017,47.9655],[-0.2766,47.9575],[-0.2907,47.951],[-0.2953,47.944],[-0.3114,47.9404],[-0.3199,47.9354],[-0.3342,47.9374],[-0.333,47.9336],[-0.3388,47.9306],[-0.3423,47.9331],[-0.3575,47.9339],[-0.3614,47.9298],[-0.3775,47.9328],[-0.397,47.9259],[-0.3952,47.9211],[-0.3968,47.9164],[-0.4024,47.9138],[-0.4052,47.915],[-0.4059,47.918],[-0.4024,47.9198],[-0.4047,47.9209],[-0.4128,47.9158],[-0.4059,47.9093],[-0.4081,47.9061],[-0.4037,47.9023],[-0.404,47.8996],[-0.4102,47.8947],[-0.3944,47.8937],[-0.3895,47.8892],[-0.3793,47.8888],[-0.3733,47.8846],[-0.3739,47.8827],[-0.3696,47.8783],[-0.3717,47.8717],[-0.3692,47.8703],[-0.3804,47.8677],[-0.3714,47.8587],[-0.3757,47.8582],[-0.3781,47.8549],[-0.3896,47.8603],[-0.3975,47.8567],[-0.4072,47.8591],[-0.4124,47.8575],[-0.411,47.8466],[-0.4283,47.8504],[-0.4268,47.8479],[-0.431,47.8468],[-0.43,47.8416],[-0.4399,47.8384],[-0.4479,47.8322],[-0.4419,47.8286],[-0.4381,47.8183],[-0.4333,47.8142],[-0.4341,47.809],[-0.4287,47.8062],[-0.4168,47.8025],[-0.3882,47.8053],[-0.3812,47.793],[-0.3815,47.7861],[-0.3754,47.7672],[-0.3817,47.7606],[-0.382,47.7654],[-0.3866,47.7698],[-0.3954,47.7704],[-0.416,47.7801],[-0.41,47.7652],[-0.4192,47.7649],[-0.4283,47.7676],[-0.4376,47.7634],[-0.4407,47.7641],[-0.4536,47.7567],[-0.4645,47.7686],[-0.4707,47.7694],[-0.4848,47.78],[-0.492,47.7786],[-0.5081,47.7859],[-0.516,47.7853],[-0.519,47.7873],[-0.5228,47.7823],[-0.518,47.7702],[-0.5194,47.7642],[-0.5329,47.7507],[-0.5632,47.7576],[-0.5747,47.753],[-0.5848,47.7584],[-0.6108,47.7357],[-0.6282,47.7381],[-0.6351,47.7356],[-0.6464,47.7368],[-0.6522,47.7341],[-0.6623,47.7356],[-0.6686,47.7412],[-0.6844,47.7386],[-0.7103,47.7446],[-0.7157,47.7408],[-0.7275,47.7432],[-0.7417,47.7381],[-0.7434,47.742],[-0.7458,47.7424],[-0.7474,47.7391],[-0.7515,47.7435],[-0.7557,47.7443],[-0.7545,47.7488],[-0.7593,47.7537],[-0.7654,47.7547],[-0.7834,47.7502],[-0.7891,47.754],[-0.7877,47.7584],[-0.7904,47.7606],[-0.8008,47.7631],[-0.8016,47.7655],[-0.8113,47.7642],[-0.8161,47.7712],[-0.8399,47.7683],[-0.8393,47.7523],[-0.8813,47.7636],[-0.8932,47.7635],[-0.8952,47.7744],[-0.9088,47.7816],[-0.9192,47.7835],[-0.9316,47.7935],[-0.93,47.7882],[-0.9349,47.7856],[-0.9365,47.788],[-0.9425,47.7887],[-0.952,47.7965],[-0.9611,47.7955],[-0.9619,47.7924],[-0.9709,47.7863],[-0.9712,47.7828],[-0.9673,47.7794],[-0.9554,47.7791],[-0.9504,47.7685],[-0.9516,47.7667],[-0.9754,47.7658],[-0.98,47.7615],[-0.9998,47.7642],[-1.0071,47.7664],[-1.0063,47.7681],[-1.0135,47.7668],[-1.0142,47.7695],[-1.0232,47.7726],[-1.0195,47.7775],[-1.0222,47.7779],[-1.0276,47.7755],[-1.0247,47.775],[-1.0299,47.7706],[-1.0415,47.7709],[-1.0472,47.7736],[-1.0808,47.7747],[-1.0865,47.7762],[-1.0934,47.7819],[-1.125,47.7843],[-1.1396,47.7821],[-1.137,47.7752],[-1.1438,47.7742],[-1.1529,47.778],[-1.171,47.7792],[-1.1713,47.7829],[-1.1778,47.7846],[-1.1932,47.7858],[-1.1969,47.7952],[-1.2061,47.7952],[-1.2114,47.797],[-1.2098,47.7987],[-1.2136,47.8029],[-1.2371,47.8083],[-1.2383,47.81],[-1.2335,47.8168],[-1.2358,47.818],[-1.2321,47.8204],[-1.2231,47.819],[-1.2203,47.8211],[-1.2228,47.8229],[-1.2221,47.8258],[-1.216,47.8312],[-1.214,47.8445],[-1.2149,47.8469],[-1.2236,47.8508],[-1.223,47.8524],[-1.2158,47.8575],[-1.2036,47.8576],[-1.1976,47.8638],[-1.189,47.867],[-1.1915,47.875],[-1.197,47.8778],[-1.1984,47.8822],[-1.1966,47.8893],[-1.1917,47.892],[-1.1819,47.8922],[-1.1805,47.8958],[-1.1762,47.8974],[-1.1771,47.9075],[-1.1756,47.9118],[-1.1719,47.9125],[-1.168,47.9171],[-1.163,47.9277],[-1.1672,47.9357],[-1.1595,47.9392],[-1.1617,47.952],[-1.159,47.9539],[-1.1606,47.9586],[-1.1583,47.9589],[-1.1553,47.9655],[-1.1482,47.9682],[-1.141,47.9677],[-1.1398,47.9704],[-1.1343,47.9682],[-1.1313,47.9718],[-1.1254,47.9717],[-1.1278,47.9757],[-1.1244,47.9797],[-1.128,47.9811],[-1.1248,47.9868],[-1.1035,47.989],[-1.0977,47.9866],[-1.0856,47.9869],[-1.0718,47.9818],[-1.0636,47.9853],[-1.0503,47.9845],[-1.0385,47.9912],[-1.0213,47.9949],[-1.0201,48.0003],[-1.0158,48.0036],[-1.0186,48.004],[-1.0167,48.0083],[-1.0183,48.0129],[-1.035,48.0336],[-1.0296,48.036],[-1.027,48.0404],[-1.0304,48.0436],[-1.0264,48.0456],[-1.0338,48.0521],[-1.0282,48.059],[-1.027,48.0652],[-1.0216,48.068],[-1.0406,48.0782],[-1.0498,48.0904],[-1.0517,48.1051],[-1.0547,48.1093],[-1.054,48.1168],[-1.0594,48.1262],[-1.0603,48.1501],[-1.0644,48.1604],[-1.0739,48.1593],[-1.0726,48.1661],[-1.0782,48.1687],[-1.0748,48.1719],[-1.0804,48.1754],[-1.0773,48.1936],[-1.0736,48.1997],[-1.0873,48.2093],[-1.0806,48.2195],[-1.0843,48.2208],[-1.0862,48.2306],[-1.0916,48.2326],[-1.0896,48.2391],[-1.0938,48.2412],[-1.0947,48.2467],[-1.0986,48.2493],[-1.0994,48.2602],[-1.102,48.2625],[-1.0999,48.2684],[-1.0936,48.2729],[-1.0906,48.2892],[-1.0838,48.2933],[-1.0821,48.2984],[-1.0592,48.3121],[-1.0536,48.3214],[-1.0451,48.3282],[-1.0558,48.3407],[-1.06,48.3492],[-1.059,48.359],[-1.0554,48.3638],[-1.059,48.3671],[-1.0648,48.3672],[-1.0645,48.3699],[-1.0572,48.3756],[-1.0566,48.3792],[-1.053,48.381],[-1.0539,48.384],[-1.0619,48.3928],[-1.0623,48.3971],[-1.0687,48.4055],[-1.0803,48.414],[-1.0775,48.4215],[-1.0836,48.4337],[-1.0796,48.4436],[-1.0652,48.4514],[-1.0671,48.461],[-1.064,48.4669],[-1.0661,48.4701],[-1.0714,48.4693],[-1.0713,48.4731],[-1.0755,48.4769],[-1.073,48.4818],[-1.0788,48.4816],[-1.07,48.4855],[-1.0785,48.4901],[-1.0756,48.4945],[-1.0767,48.5023],[-1.067,48.5045],[-1.0702,48.5085]];
 let MAPLIBRE=null;
 function loadMapLibre(){
@@ -553,7 +603,7 @@ function hmPopup(c){
   const status=loaded?`${nf(Object.values(meta.dists).reduce((s,d)=>s+d.count,0))} arrivants`:days>0?`Dans ${days} jour${days>1?"s":""}`:days===0?"Aujourd'hui":"Résultats à venir";
   return`<div class="hp"><div class="hp-n">Cross N°${c.n} · ${fmtDots(c.date)}</div><div class="hp-l">${esc(c.lieu)}</div><div class="hp-s">${status}</div><div class="hp-p">${TOWNS[c.n][2]?"📍 Lieu de départ":"Position approximative : centre de la commune"}</div>
     <div class="hp-logos">${logos}</div>
-    <div class="hp-b">${loaded?`<button class="btn primary" type="button" data-race="${c.n}" data-rtab="long">Résultats</button>`:""}${meta&&meta.track?`<button class="btn primary" type="button" data-race="${c.n}" data-rtab="replay">Revivre la course</button>`:""}<a class="btn white" href="${c.url}" target="_blank" rel="noopener">En savoir plus</a></div></div>`;
+    <div class="hp-b">${loaded?`<button class="btn primary" type="button" data-race="${c.n}" data-rtab="long">Résultats</button>`:""}${meta&&meta.track?`<button class="btn primary" type="button" data-race="${c.n}" data-rtab="replay">Revivre la course</button>`:""}${(S.tracks||[]).includes(c.n)?`<button class="btn primary" type="button" data-an="${c.n}">Analyse</button>`:""}<a class="btn white" href="${c.url}" target="_blank" rel="noopener">En savoir plus</a></div></div>`;
 }
 async function hmStart(){
   hmStop();const host=document.getElementById("hmap");if(!host)return;
@@ -596,6 +646,211 @@ async function hmStart(){
   });
 }
 function hmStop(){cancelAnimationFrame(HM.raf);if(HM.map){HM.map.remove();HM.map=null}}
+
+/* ---------- Analyse du parcours (carte 3D, profil, accès) ---------- */
+// Points utiles par cross : parkings (OpenStreetMap / organisation). Départ et arrivée viennent du tracé.
+const COURSE_INFO={
+  2:{note:"Tracé reconstitué à partir du plan publié pour la course.",
+     parkings:[{ll:[-0.70264,48.07714],label:"Parking du complexe sportif",sub:"Rue des Sports, à 100 m de l'arrivée"},
+               {ll:[-0.70011,48.07569],label:"Parking du centre-bourg",sub:"Rue du Maine, à 350 m de l'arrivée"}]}
+};
+const AN={map:null,n:0,d:"long",style:"photo",is3d:true,tr:null,line:[],cum:[],prof:null,fly:null,hover:null,kms:[],ready:false};
+const AN_SAT={version:8,glyphs:"https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf",
+  sources:{sat:{type:"raster",tiles:["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],tileSize:256,maxzoom:19,attribution:"Imagerie : Esri, Maxar, Earthstar Geographics"},
+    omt:{type:"vector",url:"https://tiles.openfreemap.org/planet"}},
+  layers:[{id:"sat",type:"raster",source:"sat",paint:{"raster-saturation":-.1,"raster-contrast":.05}},
+    {id:"sat-roads",type:"symbol",source:"omt","source-layer":"transportation_name",minzoom:14,layout:{"symbol-placement":"line","text-field":["get","name"],"text-font":["Noto Sans Regular"],"text-size":12},paint:{"text-color":"#fff","text-halo-color":"rgba(0,0,0,.75)","text-halo-width":1.4}},
+    {id:"sat-places",type:"symbol",source:"omt","source-layer":"place",layout:{"text-field":["get","name"],"text-font":["Noto Sans Bold"],"text-size":13},paint:{"text-color":"#fff","text-halo-color":"rgba(0,0,0,.8)","text-halo-width":1.6}}]};
+const anDist=(a,b)=>{const R=6371e3,r=Math.PI/180,dl=(b[1]-a[1])*r,dn=(b[0]-a[0])*r;const x=Math.sin(dl/2)**2+Math.cos(a[1]*r)*Math.cos(b[1]*r)*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(x))};
+const anFmtKm=m=>(m/1000).toLocaleString("fr-FR",{minimumFractionDigits:1,maximumFractionDigits:1})+" km";
+function anAt(d){ // point (et cap) à la distance d le long du tracé
+  const C=AN.cum,L=AN.line;if(d<=0)return{p:L[0],i:0};if(d>=C[C.length-1])return{p:L[L.length-1],i:L.length-2};
+  let lo=0,hi=C.length-1;while(hi-lo>1){const m=(lo+hi)>>1;if(C[m]<=d)lo=m;else hi=m}
+  const t=(d-C[lo])/((C[hi]-C[lo])||1);return{p:[L[lo][0]+(L[hi][0]-L[lo][0])*t,L[lo][1]+(L[hi][1]-L[lo][1])*t],i:lo};
+}
+function anBearing(a,b){const r=Math.PI/180;const y=Math.sin((b[0]-a[0])*r)*Math.cos(b[1]*r),x=Math.cos(a[1]*r)*Math.sin(b[1]*r)-Math.sin(a[1]*r)*Math.cos(b[1]*r)*Math.cos((b[0]-a[0])*r);return(Math.atan2(y,x)/r+360)%360}
+
+function pageParcours(){
+  const n=S.race,c=calOf(n),loaded=!!S.loaded[n],meta=S.races[n];
+  const info=COURSE_INFO[n]||{};
+  return`<a class="back" href="#accueil" data-go="accueil">← Accueil</a>
+  <div class="pagehead"><div><h2>Cross N°${n} · ${esc(c.lieu||"")}</h2><div class="sub">${c.date?fmtDateLong(c.date):""} · Analyse du parcours</div></div>
+    <div class="headbtns">${loaded?`<button class="btn primary" type="button" data-race="${n}" data-rtab="long">Résultats</button>`:""}${loaded&&meta&&meta.track?`<button class="btn primary" type="button" data-race="${n}" data-rtab="replay">Revivre la course</button>`:""}${c.url?`<a class="btn primary" href="${c.url}" target="_blank" rel="noopener">En savoir plus</a>`:""}</div></div>
+  <section class="an">
+    <div class="an-mapwrap"><div id="amap" class="an-map"></div>
+      <div class="an-ctl an-tl" id="andist"></div>
+      <div class="an-ctl an-tr">
+        <div class="seg an-glass" role="group" aria-label="Fond de carte"><button type="button" data-anstyle="photo" aria-pressed="${AN.style==="photo"}">Photo</button><button type="button" data-anstyle="plan" aria-pressed="${AN.style==="plan"}">Plan</button></div>
+        <div class="seg an-glass" role="group" aria-label="Vue"><button type="button" data-an3d="1" aria-pressed="${AN.is3d}">3D</button><button type="button" data-an3d="0" aria-pressed="${!AN.is3d}">2D</button></div>
+      </div>
+      <button class="btn primary an-fly" id="anfly" type="button" data-act="anfly">▶ Survoler le parcours</button>
+      <div class="an-off" hidden>La carte n'a pas pu être chargée.</div>
+    </div>
+    <div class="an-side">
+      <div class="an-stats" id="anstats">${["Distance","Dénivelé +","Altitude max","Altitude min"].map(l=>`<div><span>${l}</span><b>…</b></div>`).join("")}</div>
+      <div class="an-card"><div class="an-h">Profil</div><div class="an-prof" id="anprof"><div class="an-wait">Calcul des altitudes…</div></div></div>
+      <div class="an-card"><div class="an-h">Sur place</div><ul class="an-list" id="anlist"></ul></div>
+      <div class="an-foot"><button class="btn white" type="button" data-act="angpx">Télécharger le GPX</button>
+      <p class="note">${info.note?esc(info.note)+" ":""}Altitudes estimées d'après un modèle de terrain. Parkings issus d'OpenStreetMap : suivez les consignes de l'organisation le jour J.</p></div>
+    </div>
+  </section>`;
+}
+function anArrowImg(){
+  const s=48,c=document.createElement("canvas");c.width=c.height=s;const g=c.getContext("2d");
+  g.lineCap="round";g.lineJoin="round";
+  const draw=(col,w)=>{g.strokeStyle=col;g.lineWidth=w;g.beginPath();g.moveTo(16,12);g.lineTo(30,24);g.lineTo(16,36);g.stroke()};
+  draw("rgba(0,0,0,.45)",11);draw("#fff",6);
+  return{width:s,height:s,data:g.getImageData(0,0,s,s).data};
+}
+function anMarker(cls,html,title){const el=document.createElement("div");el.className="an-mk "+cls;el.innerHTML=html;if(title)el.title=title;return el}
+function anLayers(){
+  const map=AN.map;if(!map||!map.getStyle())return;
+  if(!map.getSource("dem"))map.addSource("dem",{type:"raster-dem",tiles:["https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"],encoding:"terrarium",tileSize:256,maxzoom:14,attribution:"Relief : Mapzen / AWS Terrain Tiles"});
+  try{map.setTerrain(AN.is3d?{source:"dem",exaggeration:1.6}:null)}catch(e){}
+  if(AN.style==="plan"&&!map.getLayer("an-hill"))map.addLayer({id:"an-hill",type:"hillshade",source:"dem",paint:{"hillshade-exaggeration":.3}},map.getStyle().layers.find(l=>l.type==="symbol")?.id);
+  try{map.setSky&&map.setSky({"sky-color":"#cfe3f2","horizon-color":"#eef3f6","fog-color":"#eef3f6","sky-horizon-blend":.5,"horizon-fog-blend":.6,"fog-ground-blend":.5})}catch(e){}
+  if(!map.hasImage("an-arrow"))map.addImage("an-arrow",anArrowImg(),{pixelRatio:2});
+  const data={type:"Feature",geometry:{type:"LineString",coordinates:AN.line}};
+  if(map.getSource("an-route")){map.getSource("an-route").setData(data)}
+  else{
+    map.addSource("an-route",{type:"geojson",data,lineMetrics:true});
+    map.addLayer({id:"an-casing",type:"line",source:"an-route",layout:{"line-join":"round","line-cap":"round"},paint:{"line-color":"#fff","line-width":["interpolate",["linear"],["zoom"],12,5,17,12],"line-opacity":.95}});
+    map.addLayer({id:"an-line",type:"line",source:"an-route",layout:{"line-join":"round","line-cap":"round"},paint:{"line-width":["interpolate",["linear"],["zoom"],12,3,17,7],
+      "line-gradient":["interpolate",["linear"],["line-progress"],0,"#3bab35",.5,"#ffb220",1,"#f26b1d"]}});
+    map.addLayer({id:"an-arrows",type:"symbol",source:"an-route",minzoom:13.5,layout:{"symbol-placement":"line","symbol-spacing":["interpolate",["linear"],["zoom"],14,60,18,110],"icon-image":"an-arrow","icon-size":["interpolate",["linear"],["zoom"],14,.6,18,1],"icon-allow-overlap":true,"icon-ignore-placement":true,"icon-rotation-alignment":"map","icon-pitch-alignment":"map"}});
+  }
+}
+function anMarkers(){
+  const map=AN.map;(AN.mks||[]).forEach(m=>m.remove());AN.mks=[];
+  const add=(el,ll,anchor,pop)=>{const m=new maplibregl.Marker({element:el,anchor:anchor||"center"}).setLngLat(ll).addTo(map);if(pop){m.setPopup(new maplibregl.Popup({offset:18,closeButton:false,maxWidth:"260px"}).setHTML(pop));el.addEventListener("click",ev=>{ev.stopPropagation();AN.mks.forEach(x=>{if(x!==m&&x.getPopup()&&x.getPopup().isOpen())x.togglePopup()});m.togglePopup()})}AN.mks.push(m);return m};
+  const total=AN.cum[AN.cum.length-1];
+  for(let k=1;k*1000<total-150;k++)add(anMarker("km",`<span>${k}</span>`,`Kilomètre ${k}`),anAt(k*1000).p,"center");
+  (COURSE_INFO[AN.n]?.parkings||[]).forEach(p=>add(anMarker("pk","P"),p.ll,"center",`<div class="hp"><div class="hp-n">Parking</div><div class="an-pop">${esc(p.label)}</div><div class="hp-p">${esc(p.sub||"")}</div><div class="hp-b"><a class="btn white" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${p.ll[1]},${p.ll[0]}">Itinéraire</a></div></div>`));
+  const L=AN.line,st=L[0],fi=L[L.length-1];
+  add(anMarker("fin",`<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M3 1h1.5v14H3zM5 2h9l-2 3 2 3H5z"/></svg>Arrivée`),fi,"bottom",`<div class="hp"><div class="hp-n">Arrivée</div><div class="hp-p">${esc(calOf(AN.n).lieu||"")}</div><div class="hp-b"><a class="btn white" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${fi[1]},${fi[0]}">Itinéraire</a></div></div>`);
+  add(anMarker("dep",`<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M4 2.5v11l9-5.5z"/></svg>Départ`),st,"bottom",`<div class="hp"><div class="hp-n">Départ · ${AN.d==="court"?"9 h 15":"9 h 45"}</div><div class="hp-p">${anDist(st,fi)>200?`À ${anFmtKm(anDist(st,fi))} de l'arrivée à vol d'oiseau`:"Au même endroit que l'arrivée"}</div><div class="hp-b"><a class="btn white" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${st[1]},${st[0]}">Itinéraire</a></div></div>`);
+  const hv=anMarker("hv","");AN.hover=new maplibregl.Marker({element:hv}).setLngLat(st);
+}
+function anFit(dur){
+  const b=new maplibregl.LngLatBounds();AN.line.forEach(p=>b.extend(p));(COURSE_INFO[AN.n]?.parkings||[]).forEach(p=>b.extend(p.ll));
+  const wide=AN.map.getContainer().clientWidth>640;
+  AN.map.fitBounds(b,{padding:wide?{top:70,bottom:70,left:60,right:60}:{top:60,bottom:70,left:24,right:24},pitch:AN.is3d?52:0,bearing:AN.is3d?-15:0,duration:dur||0});
+}
+function anSetDist(d){
+  AN.d=d;const raw=AN.tr[d]||[];AN.line=raw.map(([la,lo])=>[lo,la]);
+  AN.cum=[0];for(let i=1;i<AN.line.length;i++)AN.cum.push(AN.cum[i-1]+anDist(AN.line[i-1],AN.line[i]));
+  const avail=["long","court"].filter(x=>AN.tr[x]);
+  const box=document.getElementById("andist");if(box)box.innerHTML=avail.length>1?`<div class="seg an-glass" role="group" aria-label="Parcours">${avail.map(x=>`<button type="button" data-andist="${x}" aria-pressed="${x===d}">${DIST_LABEL[x]}</button>`).join("")}</div>`:`<span class="an-chip">${DIST_LABEL[d]}</span>`;
+  if(AN.map&&AN.map.isStyleLoaded()){anLayers();anMarkers()}
+  anInfo();anElevation();
+}
+function anInfo(){
+  const list=document.getElementById("anlist");if(!list)return;const L=AN.line,st=L[0],fi=L[L.length-1];const pk=COURSE_INFO[AN.n]?.parkings||[];
+  const g=ll=>`https://www.google.com/maps/dir/?api=1&destination=${ll[1]},${ll[0]}`;
+  list.innerHTML=`<li><i class="an-dot dep"></i><div><b>Départ</b> · ${AN.d==="court"?"9 h 15":"9 h 45"}<br><span>${anDist(st,fi)>200?`À ${anFmtKm(anDist(st,fi))} de l'arrivée (vol d'oiseau)`:"Même lieu que l'arrivée"}</span></div><a href="${g(st)}" target="_blank" rel="noopener">Itinéraire</a></li>
+    <li><i class="an-dot fin"></i><div><b>Arrivée</b><br><span>${esc(calOf(AN.n).lieu||"")}</span></div><a href="${g(fi)}" target="_blank" rel="noopener">Itinéraire</a></li>
+    ${pk.map(p=>`<li><i class="an-dot pk">P</i><div><b>${esc(p.label)}</b><br><span>${esc(p.sub||"")}</span></div><a href="${g(p.ll)}" target="_blank" rel="noopener">Itinéraire</a></li>`).join("")}`;
+}
+/* Altitudes : tuiles de terrain (Terrarium, zoom 14) décodées dans le navigateur. */
+const AN_TILES=new Map();
+function anTile(z,x,y){
+  const k=z+"/"+x+"/"+y;if(AN_TILES.has(k))return AN_TILES.get(k);
+  const p=new Promise(ok=>{const im=new Image();im.crossOrigin="anonymous";im.onload=()=>{try{const c=document.createElement("canvas");c.width=c.height=256;const g=c.getContext("2d",{willReadFrequently:true});g.drawImage(im,0,0);ok(g.getImageData(0,0,256,256).data)}catch(e){ok(null)}};im.onerror=()=>ok(null);im.src=`https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${k}.png`});
+  AN_TILES.set(k,p);return p;
+}
+async function anElevation(){
+  const box=document.getElementById("anprof");const total=AN.cum[AN.cum.length-1];const step=10,z=14,N=2**z;
+  const S2=[];for(let d=0;d<=total;d+=step)S2.push(d);if(S2[S2.length-1]<total)S2.push(total);
+  const pts=S2.map(d=>{const p=anAt(d).p;const x=(p[0]+180)/360*N,lr=p[1]*Math.PI/180,y=(1-Math.log(Math.tan(lr)+1/Math.cos(lr))/Math.PI)/2*N;return{d,tx:Math.floor(x),ty:Math.floor(y),px:Math.min(255,Math.floor((x%1)*256)),py:Math.min(255,Math.floor((y%1)*256))}});
+  const keys=[...new Set(pts.map(p=>p.tx+"/"+p.ty))];const n0=AN.n,d0=AN.d;
+  const tiles=Object.fromEntries(await Promise.all(keys.map(async k=>{const [x,y]=k.split("/");return[k,await anTile(z,x,y)]})));
+  if(AN.n!==n0||AN.d!==d0||!document.getElementById("anprof"))return;
+  let raw=pts.map(p=>{const t=tiles[p.tx+"/"+p.ty];if(!t)return null;const i=(p.py*256+p.px)*4;return t[i]*256+t[i+1]+t[i+2]/256-32768});
+  if(raw.some(v=>v===null)){box.innerHTML=`<div class="an-wait">Altitudes indisponibles pour le moment.</div>`;anStats(null);return}
+  const W=6;const ele=raw.map((_,i)=>{let s=0,c=0;for(let j=Math.max(0,i-W);j<=Math.min(raw.length-1,i+W);j++){s+=raw[j];c++}return s/c});
+  let up=0,down=0,ref=ele[0];for(const e of ele){if(e-ref>=1.5){up+=e-ref;ref=e}else if(ref-e>=1.5){down+=ref-e;ref=e}}
+  AN.prof={d:S2,e:ele,up,down,min:Math.min(...ele),max:Math.max(...ele)};anStats(AN.prof);anDrawProf();
+}
+function anStats(P){
+  const el=document.getElementById("anstats");if(!el)return;const total=AN.cum[AN.cum.length-1];const m=v=>P?Math.round(v)+" m":"–";
+  el.innerHTML=[["Distance",anFmtKm(total)],["Dénivelé +",m(P&&P.up)],["Altitude max",m(P&&P.max)],["Altitude min",m(P&&P.min)]].map(([l,v])=>`<div><span>${l}</span><b>${v}</b></div>`).join("");
+}
+function anDrawProf(){
+  const P=AN.prof,box=document.getElementById("anprof");if(!P||!box)return;
+  const W=Math.max(260,box.clientWidth||600),H=170,pl=34,pr=8,pt=12,pb=22;AN.profW=W;const total=P.d[P.d.length-1];
+  const lo=Math.floor((P.min-4)/5)*5,hi=Math.ceil((P.max+4)/5)*5;const X=d=>pl+(W-pl-pr)*d/total,Y=e=>pt+(H-pt-pb)*(1-(e-lo)/((hi-lo)||1));
+  const line=P.d.map((d,i)=>`${i?"L":"M"}${X(d).toFixed(1)},${Y(P.e[i]).toFixed(1)}`).join("");
+  const ticks=[];const kStep=total>6000?2000:1000;for(let k=0;k<=total;k+=kStep)ticks.push(k);
+  const yt=[lo,Math.round((lo+hi)/2),hi];
+  box.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Profil d'altitude : de ${Math.round(P.min)} à ${Math.round(P.max)} m, ${Math.round(P.up)} m de dénivelé positif">
+    <defs><linearGradient id="angr" x1="0" x2="1"><stop offset="0" stop-color="#3bab35"/><stop offset=".5" stop-color="#ffb220"/><stop offset="1" stop-color="#f26b1d"/></linearGradient>
+    <linearGradient id="angf" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#3bab35" stop-opacity=".28"/><stop offset="1" stop-color="#3bab35" stop-opacity=".02"/></linearGradient></defs>
+    ${yt.map(v=>`<line x1="${pl}" x2="${W-pr}" y1="${Y(v)}" y2="${Y(v)}" class="an-grid"/><text x="${pl-5}" y="${Y(v)+4}" class="an-ax" text-anchor="end">${v}</text>`).join("")}
+    ${ticks.map(k=>`<text x="${X(k)}" y="${H-5}" class="an-ax" text-anchor="middle">${k/1000}</text>`).join("")}
+    <path d="${line}L${X(total)},${H-pb}L${pl},${H-pb}Z" fill="url(#angf)"/><path d="${line}" fill="none" stroke="url(#angr)" stroke-width="2.5" vector-effect="non-scaling-stroke"/>
+    <line id="anpl" class="an-cur" x1="0" x2="0" y1="${pt}" y2="${H-pb}" visibility="hidden"/></svg><div class="an-tipbox" id="antip" hidden></div><div class="an-unit">km · altitude en m</div>`;
+  const svg=box.querySelector("svg");
+  const move=ev=>{const r=svg.getBoundingClientRect();const fx=(ev.clientX-r.left)/r.width*W;const d=Math.max(0,Math.min(total,(fx-pl)/(W-pl-pr)*total));anCursor(d)};
+  svg.addEventListener("pointermove",move);svg.addEventListener("pointerdown",move);
+  svg.addEventListener("pointerleave",()=>{if(!AN.fly)anCursor(null)});
+}
+function anCursor(d){
+  const P=AN.prof,l=document.getElementById("anpl"),tip=document.getElementById("antip");
+  if(d===null){l&&l.setAttribute("visibility","hidden");tip&&(tip.hidden=true);if(AN.hover&&AN.hoverOn){AN.hover.remove();AN.hoverOn=false}return}
+  const p=anAt(d).p;if(AN.hover&&AN.map){AN.hover.setLngLat(p);if(!AN.hoverOn){AN.hover.addTo(AN.map);AN.hoverOn=true}}
+  if(!P||!l)return;const W=AN.profW||600,pl=34,pr=8;const total=P.d[P.d.length-1];const x=pl+(W-pl-pr)*d/total;
+  l.setAttribute("x1",x);l.setAttribute("x2",x);l.setAttribute("visibility","visible");
+  const i=Math.min(P.e.length-1,Math.round(d/10));
+  tip.hidden=false;tip.textContent=`km ${(d/1000).toLocaleString("fr-FR",{maximumFractionDigits:2,minimumFractionDigits:2})} · ${Math.round(P.e[i])} m`;
+  tip.style.left=Math.max(0,Math.min(100,x/W*100))+"%";
+}
+function anFly(){
+  const map=AN.map;if(!map)return;if(AN.fly){anFlyStop(true);return}
+  const total=AN.cum[AN.cum.length-1];const dur=Math.max(18000,total*3.4);let t0=null,brg=null;
+  const btn=document.getElementById("anfly");if(btn)btn.textContent="■ Arrêter le survol";
+  if(!AN.is3d){AN.is3d=true;anLayers();document.querySelectorAll("[data-an3d]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.an3d==="1"))}
+  const step=now=>{
+    if(!AN.map||!AN.fly)return;if(t0===null)t0=now;const k=Math.min(1,(now-t0)/dur);const d=k*total;
+    const p=anAt(d).p,q=anAt(Math.min(total,d+120)).p;let b=anBearing(p,q);
+    if(brg===null)brg=b;else{let df=((b-brg+540)%360)-180;brg=(brg+df*.04+360)%360}
+    map.jumpTo({center:p,bearing:brg,pitch:62,zoom:16.2});anCursor(d);
+    if(k<1)AN.fly=requestAnimationFrame(step);else anFlyStop(false);
+  };
+  AN.fly=requestAnimationFrame(step);
+}
+function anFlyStop(user){
+  cancelAnimationFrame(AN.fly);AN.fly=null;const btn=document.getElementById("anfly");if(btn)btn.textContent="▶ Survoler le parcours";
+  if(!user&&AN.map)setTimeout(()=>{if(AN.map){anCursor(null);anFit(2000)}},400);
+}
+function anGpx(){
+  const L=AN.line;const name=`Cross corpo N°${AN.n} ${calOf(AN.n).lieu||""} – ${DIST_LABEL[AN.d]}`;
+  const g=`<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Cross Corpo 53 - résultats (site non officiel)" xmlns="http://www.topografix.com/GPX/1/1"><trk><name>${esc(name)}</name><trkseg>\n${L.map(p=>`<trkpt lat="${p[1]}" lon="${p[0]}"/>`).join("\n")}\n</trkseg></trk></gpx>\n`;
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([g],{type:"application/gpx+xml"}));
+  a.download=`cross-corpo-${AN.n}-${(calOf(AN.n).lieu||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-")}-${AN.d}.gpx`;
+  document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
+}
+async function anStart(n){
+  anStop();AN.n=n;const host=document.getElementById("amap");if(!host)return;
+  try{
+    const [tr]=await Promise.all([fetch(`data/track-${n}.json`,{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}),loadMapLibre()]);
+    if(!document.getElementById("amap")||AN.n!==n)return;
+    AN.tr=tr;const d=tr[AN.d]?AN.d:tr.long?"long":"court";
+    const touch=matchMedia("(pointer:coarse)").matches;
+    const map=new maplibregl.Map({container:host,style:AN.style==="photo"?AN_SAT:"https://tiles.openfreemap.org/styles/liberty",center:[-0.7,48.07],zoom:14,pitch:AN.is3d?52:0,maxPitch:75,
+      attributionControl:{compact:true},cooperativeGestures:touch,
+      locale:{"CooperativeGesturesHandler.MobileHelpText":"Utilisez deux doigts pour déplacer la carte","CooperativeGesturesHandler.WindowsHelpText":"Ctrl + molette pour zoomer","CooperativeGesturesHandler.MacHelpText":"⌘ + molette pour zoomer"}});
+    AN.map=map;map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),"bottom-right");
+    map.addControl(new maplibregl.FullscreenControl(),"bottom-right");
+    map.on("error",e=>console.warn("Carte",e&&e.error&&(e.error.message||e.error)));
+    ["dragstart","wheel","touchstart"].forEach(ev=>map.on(ev,e=>{if(AN.fly&&e.originalEvent)anFlyStop(true)}));
+    const init=()=>{if(AN.inited)return;AN.inited=true;anMarkers();anFit(0);
+      const hide=()=>host.querySelectorAll(".maplibregl-ctrl-attrib.maplibregl-compact-show").forEach(e=>e.classList.remove("maplibregl-compact-show"));hide();map.once("idle",hide)};
+    map.on("style.load",()=>{anLayers();init()});
+    anSetDist(d);
+    if(map.isStyleLoaded()){anLayers();init()}
+  }catch(e){console.warn(e);const off=document.querySelector(".an-off");if(off)off.hidden=false}
+}
+function anStop(){if(AN.fly){cancelAnimationFrame(AN.fly);AN.fly=null}if(AN.map){AN.map.remove();AN.map=null}AN.mks=[];AN.hover=null;AN.hoverOn=false;AN.prof=null;AN.inited=false}
 
 function pageAccueil(){
   const today=new Date().toISOString().slice(0,10);const has=racesWithData().length>0;
@@ -650,7 +905,7 @@ function pageCourse(){
   if(!tabs.some(t=>t[0]===S.rtab)&&!(S.rtab==="replay"&&meta.track))S.rtab=tabs[0][0];
   const head=`<a class="back" href="#accueil" data-go="accueil">← Tous les cross</a>
   <div class="pagehead"><div><h2>Cross N°${n} · ${esc(cal.lieu||"")}</h2><div class="sub">${meta.date?fmtDateLong(meta.date):""}</div></div>
-    <div class="headbtns">${meta.track?`<button class="btn primary" type="button" data-rtab="replay" ${S.rtab==="replay"?'aria-pressed="true"':""}>Revivre la course</button>`:""}<a class="btn primary" href="${cal.url}" target="_blank" rel="noopener">En savoir plus</a></div></div>
+    <div class="headbtns">${meta.track?`<button class="btn primary" type="button" data-rtab="replay" ${S.rtab==="replay"?'aria-pressed="true"':""}>Revivre la course</button>`:""}${(S.tracks||[]).includes(S.race)?`<button class="btn primary" type="button" data-an="${S.race}">Analyse du parcours</button>`:""}<a class="btn primary" href="${cal.url}" target="_blank" rel="noopener">En savoir plus</a></div></div>
   <div class="tabs" role="tablist">${tabs.map(([k,l])=>`<button class="tab" role="tab" data-rtab="${k}" aria-selected="${S.rtab===k}">${l}</button>`).join("")}</div>`;
   return head+(S.rtab==="replay"?replayHtml(n):S.rtab==="equipes"?raceTeams(n,avail):raceTable(n,S.rtab));
 }
@@ -1021,20 +1276,23 @@ function render(){
   if(RP.on)rpStop();
   hmStop();
   audStop();
+  anStop();
   const v=$("#view");
   if(S.view==="course"&&(!S.race||!S.loaded[S.race])){if(!S.ready){v.innerHTML=`<div class="empty"><h2>Chargement…</h2></div>`;return}S.view="accueil"}
+  if(S.view==="parcours"&&!(S.tracks||[]).includes(S.race)){if(!S.ready){v.innerHTML=`<div class="empty"><h2>Chargement…</h2></div>`;return}S.view="accueil"}
   const fid=document.activeElement&&document.activeElement.id;const caret=document.activeElement&&document.activeElement.selectionStart;
-  v.innerHTML=S.view==="course"?pageCourse():S.view==="saison"?pageSaison():S.view==="stats"?pageStats():S.view==="mentions"?pageMentions():pageAccueil();
+  v.innerHTML=S.view==="parcours"?pageParcours():S.view==="course"?pageCourse():S.view==="saison"?pageSaison():S.view==="stats"?pageStats():S.view==="mentions"?pageMentions():pageAccueil();
   if(fid&&["q","sq","gq"].includes(fid)){const el=document.getElementById(fid);if(el){el.focus();try{el.setSelectionRange(caret,caret)}catch(e){}}}
   if(S.view==="accueil")renderSearch();
   if(S.view==="course"&&S.rtab==="replay")rpStart(S.race);
   if(S.view==="stats")audStart();
   if(S.view==="accueil")hmStart();
+  if(S.view==="parcours")anStart(S.race);
 }
 function go(view,opts={}){
   S.view=view;S.limit=150;if(opts.race)S.race=opts.race;if(opts.rtab)S.rtab=opts.rtab;
   if(view==="course"){S.f={q:"",sx:"",cat:"",club:"",td:opts.rtab==="equipes"?S.f.td:""};S.sort={k:"clt",dir:1}}
-  try{history.replaceState(null,"","#"+(view==="course"?"course"+S.race:view))}catch(_){}
+  try{history.replaceState(null,"","#"+(view==="course"?"course"+S.race:view==="parcours"?"parcours"+S.race:view))}catch(_){}
   $("#overlay").innerHTML="";render();window.scrollTo({top:0});
 }
 
@@ -1079,12 +1337,18 @@ function openClub(club){
 
 /* ---------- Événements ---------- */
 document.addEventListener("click",e=>{
-  const t=e.target.closest("[data-act],[data-go],[data-race],[data-rtab],[data-sx],[data-sort],[data-ch],[data-td],[data-dos],[data-club]");
+  const t=e.target.closest("[data-act],[data-go],[data-race],[data-rtab],[data-sx],[data-sort],[data-ch],[data-td],[data-dos],[data-club],[data-an],[data-anstyle],[data-an3d],[data-andist]");
   if(!t){if(!e.target.closest(".searchzone")&&$("#gres")){$("#gres").innerHTML=""}return}
   const a=t.dataset;
   if(t.tagName==="A"&&!a.go)return;
   if(a.go){e.preventDefault();return go(a.go)}
   if(a.act==="list"){S.showList=!S.showList;return render()}
+  if(a.an)return go("parcours",{race:+a.an});
+  if(a.act==="anfly")return anFly();
+  if(a.act==="angpx")return anGpx();
+  if(a.anstyle){if(AN.style===a.anstyle)return;AN.style=a.anstyle;document.querySelectorAll("[data-anstyle]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.anstyle===AN.style));if(AN.map)AN.map.setStyle(AN.style==="photo"?AN_SAT:"https://tiles.openfreemap.org/styles/liberty");return}
+  if(a.an3d){AN.is3d=a.an3d==="1";document.querySelectorAll("[data-an3d]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.an3d===a.an3d));if(AN.map){anLayers();AN.map.easeTo({pitch:AN.is3d?55:0,bearing:AN.is3d?AN.map.getBearing():0,duration:800})}return}
+  if(a.andist){if(AN.fly)anFlyStop(true);anSetDist(a.andist);if(AN.map)anFit(800);return}
   if(a.act==="close"||(a.act==="bg"&&e.target===t)){$("#overlay").innerHTML="";return}
   if(a.act==="more"){S.limit+=300;return render()}
   if(a.race){const n=+a.race;if(!S.loaded[n])return;return go("course",{race:n,rtab:a.rtab||S.rtab})}
@@ -1128,6 +1392,8 @@ const h=(location.hash||"").slice(1);
 if(["accueil","saison","stats","mentions"].includes(h))S.view=h;
 else if(/^course\d+$/.test(h)){S.view="course";S.race=+h.slice(6)}
 else if(/^replay\d+$/.test(h)){S.view="course";S.race=+h.slice(6);S.rtab="replay"}
+else if(/^parcours\d+$/.test(h)){S.view="parcours";S.race=+h.slice(8)}
+let anRz=null;window.addEventListener("resize",()=>{clearTimeout(anRz);anRz=setTimeout(()=>{if(S.view==="parcours")anDrawProf()},200)});
 render();loadData();
 </script>
 

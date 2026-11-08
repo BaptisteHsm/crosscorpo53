@@ -391,6 +391,22 @@ tbody tr.click:hover td{background:var(--surface-3)}
 .an-pop{font-weight:700;font-size:15px;margin:2px 0}
 @media (max-width:980px){.an{grid-template-columns:1fr}.an-map{height:64vh;min-height:400px}}
 @media (max-width:560px){.an-tr{top:58px;right:auto;left:12px;justify-content:flex-start}.an-stats b{font-size:22px}}
+
+/* Accueil : liste des cross */
+.hr-list{max-width:760px;margin:0 auto}
+.hr-sec{margin-bottom:30px}
+.hr-h{font-size:24px;margin:0 0 12px 6px}
+.hr-row{display:flex;align-items:center;gap:14px;background:var(--surface);border-radius:999px;box-shadow:var(--shadow);padding:8px 8px 8px 24px;height:64px;box-sizing:border-box;margin-bottom:12px;border:2px solid transparent}
+.hr-t{flex:1;min-width:0;display:flex;align-items:baseline;gap:8px;white-space:nowrap;font-size:17px}
+.hr-t b,.hr-sep,.hr-d{flex:none}
+.hr-t b{font-weight:700}
+.hr-sep{color:var(--ink-3)}
+.hr-l{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.hr-d{color:var(--ink-3);font-size:15px}
+.hr-b{display:flex;gap:6px;flex:none}
+.hr-b .btn{font-size:14px;padding:8px 14px;border-radius:999px}
+.hr-b .btn:disabled{background:var(--surface-2);color:var(--ink-3);border-color:transparent;box-shadow:none;cursor:default}
+@media (max-width:680px){.hr-t{display:grid;grid-template-columns:auto 1fr;row-gap:2px;column-gap:8px}.hr-sep{display:none}.hr-t b{grid-column:1}.hr-d{grid-column:2;justify-self:end}.hr-l{grid-column:1/3;grid-row:2;font-size:16px}.hr-row{height:auto;flex-direction:column;align-items:stretch;border-radius:22px;padding:14px 14px 12px 18px;gap:10px}.hr-b{justify-content:stretch}.hr-b .btn{flex:1;text-align:center;justify-content:center;padding:8px 6px}}
 </style>
 
 </head>
@@ -862,31 +878,22 @@ function anStop(){if(AN.fly){cancelAnimationFrame(AN.fly);AN.fly=null}if(AN.map)
 
 function pageAccueil(){
   const today=new Date().toISOString().slice(0,10);const has=racesWithData().length>0;
-  const rows=CAL.map(c=>{const loaded=!!S.loaded[c.n];const past=c.date<=today;
-    const logos=LOGOS.filter(l=>l.r===c.n).map((l,i)=>{const nm=(ORGS[c.n]||[])[i]||"";return`<span class="tile" title="${esc(nm)}"><img src="${l.src}" alt="${esc(nm)}" width="${l.w}" height="${l.h}"></span>`}).join("");
-    const res=loaded?`<button class="btn white" type="button" data-race="${c.n}" data-rtab="long">${ICON_DL}Afficher les résultats</button>`
-      :`<span class="rl-none">${past?"Résultats à venir":"Pas de résultats"}</span>`;
-    return`<div class="rl-row"><div class="rl-date">${fmtDots(c.date)}<span class="rl-n">CROSS N°${c.n}</span></div><div class="rl-logos">${logos}</div><div class="rl-lieu">${esc(c.lieu)}</div>
-      <div class="rl-res">${res}<a class="btn primary" href="${c.url}" target="_blank" rel="noopener">En savoir plus</a></div></div>`}).join("");
+  const isPast=c=>!!S.loaded[c.n]||c.date<today;
+  const row=c=>{const loaded=!!S.loaded[c.n];const an=(S.tracks||[]).includes(c.n);
+    return`<div class="hr-row"><div class="hr-t"><b>Cross N°${c.n}</b><span class="hr-sep">–</span><span class="hr-l">${esc(c.lieu)}</span><span class="hr-d">(${fmtDots(c.date)})</span></div>
+      <div class="hr-b"><button class="btn primary" type="button" ${loaded?`data-race="${c.n}" data-rtab="long"`:`disabled title="Résultats pas encore publiés"`}>Résultats</button><button class="btn primary" type="button" ${an?`data-an="${c.n}"`:`disabled title="Plan du parcours pas encore publié"`}>Analyse</button><a class="btn white" href="${c.url}" target="_blank" rel="noopener">En savoir plus</a></div></div>`};
+  const up=CAL.filter(c=>!isPast(c)).sort((a,b)=>a.date.localeCompare(b.date)),past=CAL.filter(isPast).sort((a,b)=>b.date.localeCompare(a.date));
+  const sec=(title,list)=>list.length?`<section class="hr-sec"><h2 class="hr-h">${title}</h2>${list.map(row).join("")}</section>`:"";
   return`
   <section class="searchzone">
     <div class="searchbox">${ICON_SEARCH}<input id="gq" type="search" placeholder="Rechercher un coureur, un dossard ou une entreprise" value="${esc(S.q)}" autocomplete="off" aria-label="Rechercher un coureur ou une équipe" ${has?"":"disabled"}></div>
     <div id="gres"></div>
   </section>
-  <section class="homemap" aria-label="Carte des cross de la saison">
-    <div id="hmap"></div>
-    <div class="hm-legend"><span><i class="pin-dot done"></i>Résultats</span><span><i class="pin-dot"></i>À venir</span></div>
-    <p class="hm-fallback">La carte n'a pas pu être chargée. Utilisez le calendrier ci-dessous.</p>
-  </section>
   <nav class="homelinks" aria-label="Raccourcis">
     <button type="button" data-go="saison">Classement général</button><span aria-hidden="true">·</span>
-    <button type="button" data-go="stats">Statistiques</button><span aria-hidden="true">·</span>
-    <button type="button" data-act="list" aria-expanded="${S.showList?"true":"false"}">${S.showList?"Masquer le calendrier":"Calendrier en liste"}</button>
+    <button type="button" data-go="stats">Statistiques</button>
   </nav>
-  ${S.showList?`<div class="racelist">
-    <div class="rl-head"><div>Date</div><div>Organisateur</div><div>Lieu</div><div style="text-align:right">Résultats</div></div>
-    ${rows}
-  </div>`:""}`;
+  <div class="hr-list">${sec("À venir",up)}${sec("Passés",past)}</div>`;
 }
 
 function searchResults(q){
@@ -1294,7 +1301,6 @@ function render(){
   if(S.view==="accueil")renderSearch();
   if(S.view==="course"&&S.rtab==="replay")rpStart(S.race);
   if(S.view==="stats")audStart();
-  if(S.view==="accueil")hmStart();
   if(S.view==="parcours")anStart(S.race);
 }
 function go(view,opts={}){

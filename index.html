@@ -570,32 +570,37 @@ function allClubs(){
 }
 
 /* ---------- Classements de saison ---------- */
+// Barèmes officiels des challenges (déduits du classement des challenges publié par l'organisation).
+const PTS_STD=[20,17,15,13,11,10,9,8,7,6,5,4,3,2,1];
+const PTS_H=[40,38,36,34,32,30,28,26,24,22,20,18,16,14,12,10,8,6,4,2];
+const PTS_M3F=[12,9,7,5,4,3,2,1];
+const PTS_EQF=[12,9,7,5,4,3,2,1];
+function chScale(ch){return ch.team?(ch.d==="court"?PTS_EQF:PTS_STD):ch.m3?(ch.sx==="F"?PTS_M3F:PTS_STD):ch.sx==="M"?PTS_H:PTS_STD}
+function d2pts(a){return a.slice(0,4).join(", ")+"… jusqu'à "+a[a.length-1]+" ("+a.length+"e place)"}
+function shareRanks(list){list.forEach((p,i)=>{p.rank=i&&list[i-1].total===p.total?list[i-1].rank:i+1})}
 function challengeTable(ch){
-  const races=racesWithData();const people={};
+  const races=racesWithData();const people={};const sc=chScale(ch);
   for(const n of races){
     let rows=(S.rows[n+"|"+ch.d]||[]).filter(r=>r.sx===ch.sx&&(!ch.m3||M3PLUS.has(catBase(r.cat))));
-    rows=rows.slice().sort((a,b)=>a.cs-b.cs);const N=rows.length;
+    rows=rows.slice().sort((a,b)=>a.clt-b.clt);
     rows.forEach((r,i)=>{const place=i+1;if(masked(r))return;const p=people[r.dos]=people[r.dos]||{dos:r.dos,nom:r.nom,club:r.club,cat:r.cat,res:{}};
-      p.nom=r.nom;p.club=r.club;p.cat=r.cat;p.res[n]={place,pts:S.s.mode==="deg"?N-place+1:place}});
+      p.nom=r.nom;p.club=r.club;p.cat=r.cat;p.res[n]={place,pts:sc[place-1]||0}});
   }
   let list=Object.values(people);
-  for(const p of list){const vals=races.filter(n=>p.res[n]).map(n=>({n,v:p.res[n].pts}));
-    vals.sort((a,b)=>S.s.mode==="deg"?b.v-a.v:a.v-b.v);
-    const kept=S.s.best>0?vals.slice(0,S.s.best):vals;p.kept=new Set(kept.map(x=>x.n));
-    p.total=kept.reduce((s,x)=>s+x.v,0);p.nb=vals.length;p.best=Math.min(...vals.map(x=>p.res[x.n].place))}
-  list=list.filter(p=>p.nb>=S.s.min);
-  list.sort(S.s.mode==="deg"?(a,b)=>b.total-a.total||b.nb-a.nb||a.best-b.best:(a,b)=>b.nb-a.nb||a.total-b.total||a.best-b.best);
-  list.forEach((p,i)=>p.rank=i+1);
+  for(const p of list){const ns=races.filter(n=>p.res[n]);p.kept=new Set(ns.filter(n=>p.res[n].pts>0));
+    p.total=ns.reduce((s,n)=>s+p.res[n].pts,0);p.nb=ns.length;p.best=Math.min(...ns.map(n=>p.res[n].place))}
+  list=list.filter(p=>p.total>0);
+  list.sort((a,b)=>b.total-a.total||a.nom.localeCompare(b.nom,"fr"));shareRanks(list);
   const byCat={};for(const p of list){const c=catBase(p.cat);byCat[c]=(byCat[c]||0)+1;p.rankCat=byCat[c]}
   return{list,races};
 }
 function teamSeason(d){
-  const races=racesWithData();const by={};
-  for(const n of races){const teams=S.teams[n+"|"+d]||[];const N=teams.length;
-    for(const t of teams){const pts=N-t.rank+1;const e=by[t.club]=by[t.club]||{club:t.club,res:{},teams:0};
-      e.res[n]=S.s.all?(e.res[n]||0)+pts:Math.max(e.res[n]||0,pts);e.teams=Math.max(e.teams,t.num)}}
-  const list=Object.values(by).map(e=>({...e,total:races.reduce((s,n)=>s+(e.res[n]||0),0),nb:races.filter(n=>e.res[n]).length}));
-  list.sort((a,b)=>b.total-a.total||b.nb-a.nb);list.forEach((e,i)=>e.rank=i+1);return{list,races};
+  const races=racesWithData();const by={};const sc=d==="court"?PTS_EQF:PTS_STD;
+  for(const n of races){const teams=S.teams[n+"|"+d]||[];
+    for(const t of teams){const pts=sc[t.rank-1]||0;const e=by[t.club]=by[t.club]||{club:t.club,res:{},teams:0};
+      e.teams=Math.max(e.teams,t.num);if(pts>(e.res[n]||0))e.res[n]=pts}}
+  let list=Object.values(by).map(e=>({...e,total:races.reduce((s,n)=>s+(e.res[n]||0),0),nb:races.filter(n=>e.res[n]).length})).filter(e=>e.total>0);
+  list.sort((a,b)=>b.total-a.total||a.club.localeCompare(b.club,"fr"));shareRanks(list);return{list,races};
 }
 
 /* ---------- Pages ---------- */
@@ -980,8 +985,7 @@ function pageSaison(){
   if(!racesWithData().length)return head+emptyState();
   if(ch.team){
     const {list,races}=teamSeason(ch.d);
-    return head+`<div class="rules"><label>Comptage<select class="field" id="tall"><option value="1" ${S.s.all?"selected":""}>Toutes les équipes de l'entreprise</option><option value="0" ${S.s.all?"":"selected"}>Meilleure équipe seulement</option></select></label>
-      <p class="full">À chaque cross, une équipe marque (nombre d'équipes classées − son rang + 1) points. ${S.s.all?"Une entreprise cumule les points de toutes ses équipes : plus elle aligne de coureurs, plus elle marque.":"Seule la meilleure équipe de chaque entreprise compte."} Le règlement ne publie pas de barème de saison : celui-ci suit l'esprit annoncé, l'engagement collectif et la régularité.</p></div>
+    return head+`<div class="rules"><p class="full">Barème officiel : à chaque cross, la meilleure équipe de chaque entreprise marque ${d2pts(ch.d==="court"?PTS_EQF:PTS_STD)} points selon son rang au classement par équipes. Seules les entreprises ayant marqué des points apparaissent.${ch.d==="court"?" Le barème du challenge équipes femmes est reconstitué : de petits écarts avec le classement officiel restent possibles.":""}</p></div>
     <div class="tablebox"><table><thead><tr><th class="r">Clt</th><th>Entreprise</th><th class="r">Équipes max</th>${races.map(n=>`<th class="r">N°${n}</th>`).join("")}<th class="r">Points</th></tr></thead>
     <tbody>${list.map(e=>`<tr class="click" data-club="${esc(e.club)}"><td class="r">${posHtml(e.rank)}</td><td><b>${esc(e.club)}</b></td><td class="r">${e.teams}</td>${races.map(n=>`<td class="r">${e.res[n]?`<span class="chipcell kept">${e.res[n]}</span>`:`<span class="muted">–</span>`}</td>`).join("")}<td class="r"><span class="pts">${nf(e.total)}</span></td></tr>`).join("")||`<tr><td colspan="${4+races.length}" class="muted" style="padding:20px">Pas encore d'équipe classée.</td></tr>`}</tbody></table></div>`;
   }
@@ -993,11 +997,9 @@ function pageSaison(){
   const useCat=!!S.s.cat;const shown=rows.slice(0,S.limit);
   return head+`
   <div class="rules">
-    <label>Barème<select class="field" id="smode"><option value="deg" ${deg?"selected":""}>Points dégressifs (régularité)</option><option value="pl" ${deg?"":"selected"}>Somme des places (performance)</option></select></label>
-    <label>Courses retenues<select class="field" id="sbest"><option value="0">Toutes</option>${[3,4,5,6,7,8,9,10].map(v=>`<option value="${v}" ${S.s.best===v?"selected":""}>${v} meilleures</option>`).join("")}</select></label>
-    <label>Participation minimum<select class="field" id="smin">${[1,2,3,4,5,6,7,8,9,10,11].map(v=>`<option value="${v}" ${S.s.min===v?"selected":""}>${v} cross</option>`).join("")}</select></label>
-    <p class="full">${deg?`À chaque cross, chaque coureur marque <b>(nombre de classés du challenge − sa place + 1)</b> points : le premier marque autant de points qu'il y a de classés, le dernier 1. Plus on court, plus on cumule.`:`Total des places obtenues dans le challenge ; le plus petit total gagne. À nombre de cross différent, celui qui a couru le plus passe devant.`}${ch.m3?" Challenge Masters 3 et + : catégories M3 à M10 (50 ans et plus), classées entre elles.":""} Le règlement ne publie pas de barème de saison : celui-ci est réglable.</p>
+    <p class="full">Barème officiel : à chaque cross, les premiers du challenge marquent ${d2pts(chScale(ch))} points. Tous les cross comptent. Seuls les coureurs ayant marqué des points apparaissent.${ch.m3?" Challenge Masters 3 et + : catégories M3 et au-delà (50 ans et plus), classées entre elles.":""}</p>
   </div>
+
   <div class="bar">
     <input class="field" id="sq" type="search" placeholder="Nom, dossard ou entreprise" value="${esc(S.s.q)}" autocomplete="off">
     <select class="field" id="scat" aria-label="Catégorie"><option value="">Toutes catégories</option>${cats.map(c=>`<option value="${c}" ${S.s.cat===c?"selected":""}>${CAT_NAME[c]||c}</option>`).join("")}</select>

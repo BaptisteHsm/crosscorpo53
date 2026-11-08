@@ -23,6 +23,10 @@ async function pdfLines(buf){
   return out;
 }
 const MONTHS={janvier:1,fevrier:2,mars:3,avril:4,mai:5,juin:6,juillet:7,aout:8,septembre:9,octobre:10,novembre:11,decembre:12};
+// Ligne dont les colonnes sont décalées dans le PDF (année manquante, catégorie à la place de la nationalité).
+const RE_ROW_BAD=/^(\d+)\s+(.+?)\s+([A-Z][A-Z0-9]{1,3})\s+n°\s?(\d+)\s+(\d+)\s+([A-Z][A-Z0-9]{1,3})\s+(\d+)\s+([MF])\s+(\d{1,2}:\d{2}:\d{2})\s+(\d+'\d{2})\s*(.*)$/;
+const RE_CAT=/^(SE|ES|JU|CA|MI|BE|PO|M\d|V\d)[MF]$/;
+const CAT_BAND={ES:"16-19",JU:"16-19",CA:"16-19",SE:"20-29",M0:"30-39",M1:"40-49",M2:"40-49",M3:"50-59",M4:"50-59",M5:"60-69",M6:"60-69",M7:"70+",M8:"70+",M9:"70+"};
 const RE_ROW=/^(\d+)\s+(.+?)\s+(?:([A-Z]{3})\s+)?n°\s?(\d+)\s+(\d{2})\s+(\d+)\s+([A-Z][A-Z0-9]{1,3})\s+(\d+)\s+([MF])\s+(\d{1,2}:\d{2}:\d{2})\s+(\d+'\d{2})\s*(.*)$/;
 const RE_TEAM=/^(\d+)\s*(?:er|ère|ere|ème|eme|e|re)\s+(?:(FEMININ|FÉMININ|MASCULIN|MIXTE|FEMMES?|HOMMES?)\s+)?(.+?)\s+Temps\s+(\d{1,2}:\d{2}:\d{2})\s+Moy\.?\s+(\S+)\s+Points\s+(\d+)(?:\s*\((\d+)\))?/i;
 const RE_MEMBER=/^(\d+)\s+(.+?)\s+n°\s?(\d+)\s+(\d{1,2}:\d{2}:\d{2})/;
@@ -41,7 +45,10 @@ function parseLines(lines){
     if(flat.startsWith("CLASSEMENTPAREQUIPES")){sec="team";team=null;continue}
     if(flat.startsWith("CLASSEMENTPARCATEGORIE")){sec="cat";continue}
     if(!d)continue;const D=res.dists[d];
-    if(sec==="gen"){const m=l.match(RE_ROW);if(m)D.rows.push({clt:+m[1],nom:m[2],nat:m[3]||"",dos:+m[4],ne:m[5],cc:+m[6],cat:m[7],cs:+m[8],sx:m[9],t:toSec(m[10]),al:m[11],club:m[12].trim()})}
+    if(sec==="gen"){const m=l.match(RE_ROW);if(m)D.rows.push({clt:+m[1],nom:m[2],nat:m[3]||"",dos:+m[4],ne:m[5],cc:+m[6],cat:m[7],cs:+m[8],sx:m[9],t:toSec(m[10]),al:m[11],club:m[12].trim()});
+      else{const b=l.match(RE_ROW_BAD);if(b){const cat=RE_CAT.test(b[3])?b[3]:b[6];const sx=/[MF]$/.test(cat)?cat.slice(-1):b[8];
+        D.rows.push({clt:+b[1],nom:b[2],nat:"",dos:+b[4],ne:CAT_BAND[cat.slice(0,2)]||"",cc:+b[5],cat,cs:null,sx,t:toSec(b[9]),al:b[10],club:/^[A-Z]{3}$/.test(b[11].trim())?"":b[11].trim()});
+        console.warn("  ⚠ ligne mal formée dans le PDF, récupérée au mieux :",b[1],b[2])}}}
     else if(sec==="team"){
       const tm=l.match(RE_TEAM);
       if(tm){const nm=tm[3].match(/^(.*?)\s*-\s*(\d+)$/);team={rank:+tm[1],label:(tm[2]||(d==="court"?"FEMININ":"MIXTE")).toUpperCase(),club:nm?nm[1].trim():tm[3].trim(),num:nm?+nm[2]:1,pts:+tm[6],scr:tm[7]?+tm[7]:null,t:toSec(tm[4]),dos:[]};D.teams.push(team);continue}

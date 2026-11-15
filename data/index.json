@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-08T13:13:47.436Z",
+ "updated": "2026-11-15T12:29:56.232Z",
  "races": [
   {
    "n": 1,
@@ -30,6 +30,22 @@
     "long": {
      "km": 10,
      "count": 1446
+    }
+   }
+  },
+  {
+   "n": 3,
+   "date": "2026-11-15",
+   "file": "cross-3.json",
+   "track": "track-3.json",
+   "dists": {
+    "court": {
+     "km": 4.5,
+     "count": 266
+    },
+    "long": {
+     "km": 9.35,
+     "count": 1395
     }
    }
   }

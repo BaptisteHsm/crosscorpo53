@@ -8,6 +8,8 @@
   "dependencies": {
     "@fontsource/contrail-one": "5.3.0",
     "@fontsource/open-sans": "5.3.0",
+    "leaflet": "1.9.4",
+    "maplibre-gl": "4.7.1",
     "pdfjs-dist": "3.11.174",
     "postcss": "8.5.33",
     "postcss-prefix-selector": "2.2.1"

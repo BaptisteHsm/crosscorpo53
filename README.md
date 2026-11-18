@@ -38,14 +38,14 @@ La liste reste privée (secret), elle n'est pas visible dans le dépôt public.
 - `scripts/build-data.mjs` : lecture des PDF.
 - `.github/workflows/build.yml` : lecture des PDF et publication sur GitHub Pages.
 
-## Module WordPress (site officiel)
+## Extension WordPress (site officiel)
 
-Le site existe aussi sous forme d'extension WordPress, pour l'afficher dans une page du site crosscorpo53.fr, avec l'en-tête et le pied de page du thème.
+`node scripts/build-wp.mjs` génère `dist/cc53-resultats.zip`, une extension WordPress **autonome** (aucun lien avec ce dépôt ni avec GitHub) :
 
-- Télécharger l'extension : https://baptistehsm.github.io/crosscorpo53/wp/cc53-resultats.zip
-- WordPress › Extensions › Ajouter › Téléverser, puis Activer.
-- Créer une page et y insérer le shortcode `[cc53_resultats]`.
+- menu « Cross Corpo » : création et modification des cross (numéro, date, lieu, page « En savoir plus », organisateurs avec logos, lieu de départ, parkings, consignes) ;
+- dépôt du PDF « Scratch » dans la fiche du cross : lu dans le navigateur avec le même code que ce dépôt (`scripts/parse-core.mjs`), seuls les classements sont enregistrés (tranche d'âge au lieu de l'année de naissance), le PDF n'est pas conservé ;
+- dépôt des GPX long et court ;
+- réglages : saison, heures de départ, dossards masqués, contact « données personnelles » ;
+- shortcode `[cc53_resultats]` : application complète, styles isolés dans `.cc53`, polices, cartes (MapLibre, Leaflet) et lecteur de PDF inclus.
 
-L'extension charge l'application et les résultats depuis GitHub Pages (`/wp/` et `/data/`), régénérés à chaque mise à jour du dépôt par `scripts/build-wp.mjs` : un nouveau cross apparaît sur WordPress sans réinstaller l'extension. Les styles sont isolés dans le conteneur `.cc53` et les polices sont servies depuis GitHub Pages (pas de Google Fonts).
-
-Envoi des résultats depuis WordPress (facultatif) : Réglages › Cross Corpo 53, enregistrer un jeton GitHub « fine-grained » limité à ce dépôt (droits Contents : lecture et écriture, Actions : lecture). Un formulaire permet alors d'envoyer un PDF « Scratch » ou une trace GPX, et affiche l'état des derniers traitements.
+Les données sont stockées dans `wp-content/uploads/cc53/`. À la première activation, les cross de la saison et les résultats déjà publiés ici sont importés.

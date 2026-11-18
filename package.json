@@ -2,6 +2,14 @@
   "name": "cross-corpo-53-resultats",
   "private": true,
   "type": "module",
-  "scripts": { "build-data": "node scripts/build-data.mjs" },
-  "dependencies": { "pdfjs-dist": "3.11.174" }
+  "scripts": {
+    "build-data": "node scripts/build-data.mjs"
+  },
+  "dependencies": {
+    "@fontsource/contrail-one": "5.3.0",
+    "@fontsource/open-sans": "5.3.0",
+    "pdfjs-dist": "3.11.174",
+    "postcss": "8.5.33",
+    "postcss-prefix-selector": "2.2.1"
+  }
 }

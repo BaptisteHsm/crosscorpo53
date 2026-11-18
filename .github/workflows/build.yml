@@ -51,6 +51,9 @@ jobs:
           cp index.html _site/
           cp -r data _site/
 
+      - name: Préparer le module WordPress
+        run: node scripts/build-wp.mjs
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
